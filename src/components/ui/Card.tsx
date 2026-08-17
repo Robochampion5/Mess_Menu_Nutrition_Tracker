@@ -15,11 +15,6 @@ const paddingStyles: Record<string, string> = {
   lg: 'p-5',
 }
 
-const variantStyles: Record<string, string> = {
-  default: '',
-  glass: 'glass',
-  raised: '',
-}
 
 export function Card({
   children,

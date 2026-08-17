@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo } from 'react'
 import { Plus, ChevronDown, ChevronUp, Dumbbell, Trophy, History, Trash2 } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { useAppStore } from '../store/useAppStore'

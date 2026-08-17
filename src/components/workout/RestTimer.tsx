@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Play, Pause, SkipForward } from 'lucide-react'
 import { formatDuration } from '../../utils/workout'
 
@@ -15,6 +15,16 @@ export function RestTimer({ autoStart = false, onDone }: RestTimerProps) {
   const [running, setRunning] = useState(autoStart)
   const endTimeRef = useRef<number | null>(null)
   const rafRef = useRef<number | null>(null)
+
+  // Set the end-time ref before the first paint when auto-starting.
+  // useLayoutEffect runs synchronously after DOM mutation but before paint,
+  // so it is NOT a render-phase call and satisfies react-hooks/purity.
+  useLayoutEffect(() => {
+    if (autoStart) {
+      endTimeRef.current = Date.now() + 90 * 1000
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Reset when duration preset changes
   function selectDuration(d: number) {
@@ -70,13 +80,6 @@ export function RestTimer({ autoStart = false, onDone }: RestTimerProps) {
     }
   }, [running, duration, onDone])
 
-  // Auto-start on mount if prop set
-  useEffect(() => {
-    if (autoStart) {
-      endTimeRef.current = Date.now() + duration * 1000
-      setRunning(true)
-    }
-  }, [autoStart]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const pct = remaining / duration
   const circumference = 2 * Math.PI * 28 // r=28
