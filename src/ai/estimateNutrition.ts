@@ -18,9 +18,7 @@ export type EstimateNutritionResult =
  * Estimates nutrition for a free-text dish description.
  * Checks aiCache first — same dish never triggers two API calls.
  */
-export async function estimateNutrition(
-  dishDescription: string,
-): Promise<EstimateNutritionResult> {
+export async function estimateNutrition(dishDescription: string): Promise<EstimateNutritionResult> {
   // Check cache first
   const cached = await getAiCache(dishDescription)
   if (cached?.nutrition) {

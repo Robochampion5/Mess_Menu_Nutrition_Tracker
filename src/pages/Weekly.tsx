@@ -18,17 +18,13 @@ export function Weekly() {
   const proteinGoal = profile?.proteinGoalG ?? 120
 
   useEffect(() => {
-    Promise.all(weekDates.map((date) => getDailyLogsForDate(date))).finally(() =>
-      setLoading(false),
-    )
+    Promise.all(weekDates.map((date) => getDailyLogsForDate(date))).finally(() => setLoading(false))
   }, [weekDates, getDailyLogsForDate])
 
   const weekData = useMemo(() => {
     return weekDates.map((date, i) => {
       const logs = MEAL_SLOTS.map((slot) => dailyLogs.get(`${date}::${slot}`)).filter(Boolean)
-      const macroList = logs
-        .filter((r) => r!.status === 'ate')
-        .map((r) => logMacros(r!, foodMap))
+      const macroList = logs.filter((r) => r!.status === 'ate').map((r) => logMacros(r!, foodMap))
       const totals = sumMacros(macroList)
       const goalHit = totals.protein >= proteinGoal
       const hasAnyLog = logs.length > 0
@@ -51,10 +47,7 @@ export function Weekly() {
     return Math.round(logged.reduce((sum, d) => sum + d.protein, 0) / logged.length)
   }, [weekData])
 
-  const daysHit = useMemo(
-    () => weekData.filter((d) => d.goalHit && !d.isFuture).length,
-    [weekData],
-  )
+  const daysHit = useMemo(() => weekData.filter((d) => d.goalHit && !d.isFuture).length, [weekData])
 
   const streak = useMemo(() => {
     let s = 0

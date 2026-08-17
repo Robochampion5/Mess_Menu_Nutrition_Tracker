@@ -15,8 +15,7 @@ export interface DishMatchResult {
 }
 
 export type MatchDishesResult =
-  | { ok: true; matches: DishMatchResult[] }
-  | { ok: false; error: string; noKey?: boolean }
+  { ok: true; matches: DishMatchResult[] } | { ok: false; error: string; noKey?: boolean }
 
 export async function matchDishes(
   dishNames: string[],

@@ -66,9 +66,8 @@ export function suggestPlate(
     // How many servings do we need to close the protein gap?
     const servingsNeededForProtein = Math.ceil(proteinLeft / item.proteinPer)
     // How many servings fit in calorie budget?
-    const servingsFitInCalories = item.caloriesPer > 0
-      ? Math.floor(caloriesLeft / item.caloriesPer)
-      : maxServings
+    const servingsFitInCalories =
+      item.caloriesPer > 0 ? Math.floor(caloriesLeft / item.caloriesPer) : maxServings
 
     const servings = Math.min(maxServings, servingsNeededForProtein, servingsFitInCalories)
 

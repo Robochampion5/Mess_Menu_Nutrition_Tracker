@@ -9,8 +9,7 @@ export interface ParsedMenuItem {
 }
 
 export type ParseMenuResult =
-  | { ok: true; items: ParsedMenuItem[] }
-  | { ok: false; raw: string; error: string; noKey?: boolean }
+  { ok: true; items: ParsedMenuItem[] } | { ok: false; raw: string; error: string; noKey?: boolean }
 
 const SYSTEM_PROMPT = `You are a structured data extractor for Indian mess/hostel menus.
 Given raw menu text (which may be a table, list, or mixed formatting), extract every dish.
@@ -48,10 +47,7 @@ export async function parseMenuText(rawText: string): Promise<ParseMenuResult> {
     // Basic validation
     const validSlots: MealSlot[] = ['breakfast', 'lunch', 'snacks', 'dinner']
     const valid = result.data.filter(
-      (item) =>
-        item.day &&
-        item.dish &&
-        validSlots.includes(item.slot),
+      (item) => item.day && item.dish && validSlots.includes(item.slot),
     )
 
     return { ok: true, items: valid }

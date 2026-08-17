@@ -7,10 +7,7 @@ interface ToggleProps {
 
 export function Toggle({ checked, onChange, label, id }: ToggleProps) {
   return (
-    <label
-      htmlFor={id}
-      className="inline-flex items-center gap-2 cursor-pointer select-none"
-    >
+    <label htmlFor={id} className="inline-flex items-center gap-2 cursor-pointer select-none">
       <span
         role="switch"
         aria-checked={checked}

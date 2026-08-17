@@ -34,7 +34,9 @@ export function Home() {
     getDailyLogsForDate(selectedDate).finally(() => {
       if (!cancelled) setLoading(false)
     })
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [selectedDate, getDailyLogsForDate])
 
   const mealMacros = useMemo(
@@ -54,7 +56,7 @@ export function Home() {
 
   const proteinGoal = profile?.proteinGoalG ?? 120
   const calorieGoal = profile?.calorieGoalKcal ?? 2000
-  const carbsGoal = Math.round(calorieGoal * 0.45 / 4) // 45% of cals from carbs
+  const carbsGoal = Math.round((calorieGoal * 0.45) / 4) // 45% of cals from carbs
 
   const proteinRemaining = remaining(totalMacros.protein, proteinGoal)
 
@@ -70,7 +72,10 @@ export function Home() {
     <div className="flex-1 pb-24 overflow-y-auto">
       {/* Date header */}
       <div className="px-4 pt-6 pb-2 flex items-center gap-3">
-        <button onClick={() => shiftDate(-1)} className="p-1 rounded-full hover:bg-[var(--color-surface-2)] transition-colors">
+        <button
+          onClick={() => shiftDate(-1)}
+          className="p-1 rounded-full hover:bg-[var(--color-surface-2)] transition-colors"
+        >
           <ChevronLeft size={20} className="text-[var(--color-text-secondary)]" />
         </button>
         <h1 className="flex-1 text-center font-semibold text-white">
@@ -89,8 +94,18 @@ export function Home() {
       {!loading && (
         <div className="flex justify-center pt-6 pb-10">
           <ActivityRings
-            protein={{ value: totalMacros.protein, goal: proteinGoal, color: '#ff375f', label: 'Protein' }}
-            calories={{ value: totalMacros.calories, goal: calorieGoal, color: '#30d158', label: 'Calories' }}
+            protein={{
+              value: totalMacros.protein,
+              goal: proteinGoal,
+              color: '#ff375f',
+              label: 'Protein',
+            }}
+            calories={{
+              value: totalMacros.calories,
+              goal: calorieGoal,
+              color: '#30d158',
+              label: 'Calories',
+            }}
             carbs={{ value: totalMacros.carbs, goal: carbsGoal, color: '#0a84ff', label: 'Carbs' }}
             size={220}
           />
@@ -124,11 +139,18 @@ export function Home() {
       <div className="px-4 grid grid-cols-3 gap-3 mb-4">
         {[
           { label: 'Protein', value: Math.round(totalMacros.protein), unit: 'g', color: '#ff375f' },
-          { label: 'Calories', value: Math.round(totalMacros.calories), unit: 'kcal', color: '#30d158' },
+          {
+            label: 'Calories',
+            value: Math.round(totalMacros.calories),
+            unit: 'kcal',
+            color: '#30d158',
+          },
           { label: 'Carbs', value: Math.round(totalMacros.carbs), unit: 'g', color: '#0a84ff' },
         ].map(({ label, value, unit, color }) => (
           <Card key={label} padding="sm" className="text-center">
-            <p className="text-xl font-bold tabular-nums" style={{ color }}>{value}</p>
+            <p className="text-xl font-bold tabular-nums" style={{ color }}>
+              {value}
+            </p>
             <p className="text-[10px] text-[var(--color-text-secondary)]">{unit}</p>
             <p className="text-[10px] text-[var(--color-text-tertiary)]">{label}</p>
           </Card>

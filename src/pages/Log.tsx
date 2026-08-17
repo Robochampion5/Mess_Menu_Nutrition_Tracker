@@ -12,7 +12,12 @@ import { useAppStore } from '../store/useAppStore'
 import { estimateNutrition } from '../ai/estimateNutrition'
 import { suggestPlate } from '../utils/suggest'
 import { logMacros, sumMacros, remaining } from '../utils/nutrition'
-import { toDateString, relativeDateLabel, getISOWeekKey, dayIndexFromDateString } from '../utils/weekKey'
+import {
+  toDateString,
+  relativeDateLabel,
+  getISOWeekKey,
+  dayIndexFromDateString,
+} from '../utils/weekKey'
 import type { MealSlot, DailyLogRecord, DailyLogEntry, FoodItem } from '../types'
 
 const MEAL_SLOTS: MealSlot[] = ['breakfast', 'lunch', 'snacks', 'dinner']
@@ -28,7 +33,11 @@ interface OutsideFoodModal {
   query: string
   estimating: boolean
   result: {
-    calories: number; protein: number; carbs: number; fat: number; servingUnit: string
+    calories: number
+    protein: number
+    carbs: number
+    fat: number
+    servingUnit: string
   } | null
   error: string | null
   mealSlot: MealSlot
@@ -40,7 +49,15 @@ export function Log() {
   const slotParam = (params.get('slot') as MealSlot | null) ?? null
   const showOutside = params.get('outside') === 'true'
 
-  const { foodItems, dailyLogs, weeklyMenus, profile, upsertDailyLog, getDailyLogsForDate, upsertFoodItem } = useAppStore()
+  const {
+    foodItems,
+    dailyLogs,
+    weeklyMenus,
+    profile,
+    upsertDailyLog,
+    getDailyLogsForDate,
+    upsertFoodItem,
+  } = useAppStore()
   const [selectedDate, setSelectedDate] = useState(dateParam)
   const [loading, setLoading] = useState(false)
 
@@ -63,7 +80,9 @@ export function Log() {
     getDailyLogsForDate(selectedDate).finally(() => {
       if (!cancelled) setLoading(false)
     })
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [selectedDate, getDailyLogsForDate])
 
   const weekKey = useMemo(() => getISOWeekKey(new Date(selectedDate + 'T00:00:00')), [selectedDate])
@@ -133,9 +152,7 @@ export function Log() {
       setOutsideModal((m) => ({
         ...m,
         estimating: false,
-        error: res.noKey
-          ? 'Add your Gemini API key in Settings to estimate nutrition.'
-          : res.error,
+        error: res.noKey ? 'Add your Gemini API key in Settings to estimate nutrition.' : res.error,
       }))
     }
   }
@@ -144,7 +161,11 @@ export function Log() {
     const { query, result, mealSlot } = outsideModal
     if (!result) return
 
-    const foodId = query.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-outside'
+    const foodId =
+      query
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '') + '-outside'
     const newFood: FoodItem = {
       id: foodId,
       name: query,
@@ -178,7 +199,14 @@ export function Log() {
     })
 
     showToast(`${query} logged!`, 'success')
-    setOutsideModal({ open: false, query: '', estimating: false, result: null, error: null, mealSlot: 'lunch' })
+    setOutsideModal({
+      open: false,
+      query: '',
+      estimating: false,
+      result: null,
+      error: null,
+      mealSlot: 'lunch',
+    })
   }
 
   return (
@@ -187,7 +215,9 @@ export function Log() {
       <div className="px-4 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-white">Log Meals</h1>
         <div className="flex items-center gap-3 mt-2">
-          <p className="text-sm text-[var(--color-text-secondary)]">{relativeDateLabel(selectedDate)}</p>
+          <p className="text-sm text-[var(--color-text-secondary)]">
+            {relativeDateLabel(selectedDate)}
+          </p>
           <input
             type="date"
             value={selectedDate}
@@ -201,145 +231,177 @@ export function Log() {
       {/* Day macro summary */}
       <div className="px-4 mb-4 flex gap-3">
         {[
-          { label: 'Protein', value: `${Math.round(dayMacros.protein)}g`, color: '#ff375f', goal: proteinGoal },
-          { label: 'Calories', value: `${Math.round(dayMacros.calories)}`, color: '#30d158', goal: calorieGoal },
+          {
+            label: 'Protein',
+            value: `${Math.round(dayMacros.protein)}g`,
+            color: '#ff375f',
+            goal: proteinGoal,
+          },
+          {
+            label: 'Calories',
+            value: `${Math.round(dayMacros.calories)}`,
+            color: '#30d158',
+            goal: calorieGoal,
+          },
         ].map(({ label, value, color, goal }) => (
-          <div key={label} className="flex-1 bg-[var(--color-surface)] rounded-[var(--radius-lg)] p-3 text-center">
-            <p className="text-lg font-bold" style={{ color }}>{value}</p>
-            <p className="text-[10px] text-[var(--color-text-tertiary)]">/ {goal} {label}</p>
+          <div
+            key={label}
+            className="flex-1 bg-[var(--color-surface)] rounded-[var(--radius-lg)] p-3 text-center"
+          >
+            <p className="text-lg font-bold" style={{ color }}>
+              {value}
+            </p>
+            <p className="text-[10px] text-[var(--color-text-tertiary)]">
+              / {goal} {label}
+            </p>
           </div>
         ))}
       </div>
 
       {loading && (
-        <div className="flex justify-center py-8"><Spinner /></div>
+        <div className="flex justify-center py-8">
+          <Spinner />
+        </div>
       )}
 
       {/* Meal slots */}
-      {!loading && MEAL_SLOTS.map((slot) => {
-        const record = dailyLogs.get(`${selectedDate}::${slot}`)
-        const status = record?.status ?? 'unset'
-        const slotItems = menuItemsBySlot.get(slot) ?? []
-        const slotMacros = record?.status === 'ate' ? logMacros(record, foodMap) : null
-        const proteinLeft = remaining(dayMacros.protein, proteinGoal)
-        const caloriesLeft = remaining(dayMacros.calories, calorieGoal)
-        const suggestions = status === 'ate' && slotItems.length > 0
-          ? suggestPlate(slotItems, proteinLeft, caloriesLeft)
-          : []
+      {!loading &&
+        MEAL_SLOTS.map((slot) => {
+          const record = dailyLogs.get(`${selectedDate}::${slot}`)
+          const status = record?.status ?? 'unset'
+          const slotItems = menuItemsBySlot.get(slot) ?? []
+          const slotMacros = record?.status === 'ate' ? logMacros(record, foodMap) : null
+          const proteinLeft = remaining(dayMacros.protein, proteinGoal)
+          const caloriesLeft = remaining(dayMacros.calories, calorieGoal)
+          const suggestions =
+            status === 'ate' && slotItems.length > 0
+              ? suggestPlate(slotItems, proteinLeft, caloriesLeft)
+              : []
 
-        return (
-          <div key={slot} className="px-4 mb-4">
-            <Card className={status === 'skipped' ? 'opacity-60' : ''}>
-              {/* Slot header */}
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">{MEAL_ICONS[slot]}</span>
-                  <span className="font-semibold capitalize text-white">{slot}</span>
-                  {status === 'skipped' && <Badge variant="skipped">Skipped</Badge>}
-                </div>
-                <Toggle
-                  checked={status === 'ate'}
-                  onChange={(ate) => setMealStatus(slot, ate ? 'ate' : 'skipped')}
-                  label={status === 'ate' ? 'Ate' : 'Skipped'}
-                />
-              </div>
-
-              {/* Macro sub-total */}
-              {slotMacros && (
-                <p className="text-xs text-[var(--color-text-secondary)] mb-3">
-                  {Math.round(slotMacros.protein)}g protein · {Math.round(slotMacros.calories)} kcal
-                </p>
-              )}
-
-              {/* Suggested plate */}
-              {status === 'ate' && suggestions.length > 0 && (
-                <div className="mb-3 bg-[var(--color-protein)]/10 border border-[var(--color-protein)]/20 rounded-[var(--radius-md)] px-3 py-2">
-                  <p className="text-xs font-medium text-[var(--color-protein)] mb-1.5">💡 Suggested plate</p>
-                  <div className="space-y-1">
-                    {suggestions.map((s) => (
-                      <div key={s.foodItem.id} className="flex justify-between text-xs">
-                        <span className="text-white">{s.foodItem.name}</span>
-                        <span className="text-[var(--color-text-secondary)]">
-                          ×{s.servings} · {Math.round(s.protein)}g P
-                        </span>
-                      </div>
-                    ))}
+          return (
+            <div key={slot} className="px-4 mb-4">
+              <Card className={status === 'skipped' ? 'opacity-60' : ''}>
+                {/* Slot header */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{MEAL_ICONS[slot]}</span>
+                    <span className="font-semibold capitalize text-white">{slot}</span>
+                    {status === 'skipped' && <Badge variant="skipped">Skipped</Badge>}
                   </div>
+                  <Toggle
+                    checked={status === 'ate'}
+                    onChange={(ate) => setMealStatus(slot, ate ? 'ate' : 'skipped')}
+                    label={status === 'ate' ? 'Ate' : 'Skipped'}
+                  />
                 </div>
-              )}
 
-              {/* Menu items */}
-              {status === 'ate' && (
-                <div className="space-y-2">
-                  {slotItems.length === 0 && (
-                    <p className="text-xs text-[var(--color-text-tertiary)] py-1">
-                      No menu for this slot — add outside food below
+                {/* Macro sub-total */}
+                {slotMacros && (
+                  <p className="text-xs text-[var(--color-text-secondary)] mb-3">
+                    {Math.round(slotMacros.protein)}g protein · {Math.round(slotMacros.calories)}{' '}
+                    kcal
+                  </p>
+                )}
+
+                {/* Suggested plate */}
+                {status === 'ate' && suggestions.length > 0 && (
+                  <div className="mb-3 bg-[var(--color-protein)]/10 border border-[var(--color-protein)]/20 rounded-[var(--radius-md)] px-3 py-2">
+                    <p className="text-xs font-medium text-[var(--color-protein)] mb-1.5">
+                      💡 Suggested plate
                     </p>
-                  )}
-                  {slotItems.map((item) => {
-                    const entry = record?.entries.find((e) => e.foodId === item.id)
-                    const servings = entry?.servings ?? 0
-                    return (
-                      <div key={item.id} className="flex items-center gap-3">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm text-white truncate">{item.name}</p>
-                          <p className="text-xs text-[var(--color-text-tertiary)]">
-                            {Math.round(item.proteinPer * servings * 10) / 10}g P ·
-                            {Math.round(item.caloriesPer * servings)} kcal
-                          </p>
+                    <div className="space-y-1">
+                      {suggestions.map((s) => (
+                        <div key={s.foodItem.id} className="flex justify-between text-xs">
+                          <span className="text-white">{s.foodItem.name}</span>
+                          <span className="text-[var(--color-text-secondary)]">
+                            ×{s.servings} · {Math.round(s.protein)}g P
+                          </span>
                         </div>
-                        <Stepper
-                          value={servings}
-                          min={0}
-                          max={6}
-                          step={0.5}
-                          onChange={(v) => updateServings(slot, item.id, v)}
-                        />
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-
-              {/* Outside food entries */}
-              {status === 'ate' && record?.entries.filter((e) => e.isOutsideFood).map((entry) => {
-                const food = foodMap.get(entry.foodId)
-                if (!food) return null
-                return (
-                  <div key={entry.foodId} className="flex items-center gap-3 mt-2 pt-2 border-t border-[var(--color-border)]">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <p className="text-sm text-white truncate">{food.name}</p>
-                        <Badge variant="neutral" size="sm">Outside</Badge>
-                      </div>
-                      <p className="text-xs text-[var(--color-text-tertiary)]">
-                        {Math.round(food.proteinPer * entry.servings * 10) / 10}g P
-                      </p>
+                      ))}
                     </div>
-                    <Stepper
-                      value={entry.servings}
-                      min={0}
-                      max={5}
-                      onChange={(v) => updateServings(slot, entry.foodId, v)}
-                    />
                   </div>
-                )
-              })}
+                )}
 
-              {/* Add outside food for this slot */}
-              {status === 'ate' && (
-                <button
-                  type="button"
-                  onClick={() => setOutsideModal({ ...outsideModal, open: true, mealSlot: slot })}
-                  className="w-full mt-3 py-2 text-xs text-[var(--color-text-secondary)] border border-dashed border-[var(--color-border)] rounded-[var(--radius-md)] flex items-center justify-center gap-1 hover:border-[var(--color-protein)] hover:text-[var(--color-protein)] transition-colors"
-                >
-                  <Plus size={12} /> Add outside food
-                </button>
-              )}
-            </Card>
-          </div>
-        )
-      })}
+                {/* Menu items */}
+                {status === 'ate' && (
+                  <div className="space-y-2">
+                    {slotItems.length === 0 && (
+                      <p className="text-xs text-[var(--color-text-tertiary)] py-1">
+                        No menu for this slot — add outside food below
+                      </p>
+                    )}
+                    {slotItems.map((item) => {
+                      const entry = record?.entries.find((e) => e.foodId === item.id)
+                      const servings = entry?.servings ?? 0
+                      return (
+                        <div key={item.id} className="flex items-center gap-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm text-white truncate">{item.name}</p>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">
+                              {Math.round(item.proteinPer * servings * 10) / 10}g P ·
+                              {Math.round(item.caloriesPer * servings)} kcal
+                            </p>
+                          </div>
+                          <Stepper
+                            value={servings}
+                            min={0}
+                            max={6}
+                            step={0.5}
+                            onChange={(v) => updateServings(slot, item.id, v)}
+                          />
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {/* Outside food entries */}
+                {status === 'ate' &&
+                  record?.entries
+                    .filter((e) => e.isOutsideFood)
+                    .map((entry) => {
+                      const food = foodMap.get(entry.foodId)
+                      if (!food) return null
+                      return (
+                        <div
+                          key={entry.foodId}
+                          className="flex items-center gap-3 mt-2 pt-2 border-t border-[var(--color-border)]"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <p className="text-sm text-white truncate">{food.name}</p>
+                              <Badge variant="neutral" size="sm">
+                                Outside
+                              </Badge>
+                            </div>
+                            <p className="text-xs text-[var(--color-text-tertiary)]">
+                              {Math.round(food.proteinPer * entry.servings * 10) / 10}g P
+                            </p>
+                          </div>
+                          <Stepper
+                            value={entry.servings}
+                            min={0}
+                            max={5}
+                            onChange={(v) => updateServings(slot, entry.foodId, v)}
+                          />
+                        </div>
+                      )
+                    })}
+
+                {/* Add outside food for this slot */}
+                {status === 'ate' && (
+                  <button
+                    type="button"
+                    onClick={() => setOutsideModal({ ...outsideModal, open: true, mealSlot: slot })}
+                    className="w-full mt-3 py-2 text-xs text-[var(--color-text-secondary)] border border-dashed border-[var(--color-border)] rounded-[var(--radius-md)] flex items-center justify-center gap-1 hover:border-[var(--color-protein)] hover:text-[var(--color-protein)] transition-colors"
+                  >
+                    <Plus size={12} /> Add outside food
+                  </button>
+                )}
+              </Card>
+            </div>
+          )
+        })}
 
       {/* Outside food FAB */}
       <button
@@ -357,7 +419,15 @@ export function Log() {
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-white">Add outside food</h3>
               <button
-                onClick={() => setOutsideModal({ ...outsideModal, open: false, query: '', result: null, error: null })}
+                onClick={() =>
+                  setOutsideModal({
+                    ...outsideModal,
+                    open: false,
+                    query: '',
+                    result: null,
+                    error: null,
+                  })
+                }
                 className="text-[var(--color-text-secondary)]"
               >
                 <X size={20} />
@@ -367,7 +437,14 @@ export function Log() {
             <div className="flex gap-2">
               <input
                 value={outsideModal.query}
-                onChange={(e) => setOutsideModal((m) => ({ ...m, query: e.target.value, result: null, error: null }))}
+                onChange={(e) =>
+                  setOutsideModal((m) => ({
+                    ...m,
+                    query: e.target.value,
+                    result: null,
+                    error: null,
+                  }))
+                }
                 onKeyDown={(e) => e.key === 'Enter' && estimateOutside()}
                 placeholder="e.g. Chicken biryani, 1 plate"
                 className="flex-1 bg-[var(--color-surface-2)] text-white rounded-[var(--radius-md)] px-3 py-2.5 text-sm outline-none"
@@ -402,18 +479,24 @@ export function Log() {
 
             {outsideModal.result && (
               <div className="bg-[var(--color-surface-2)] rounded-[var(--radius-lg)] p-4 space-y-3">
-                <p className="text-xs text-[var(--color-text-secondary)] font-medium">Estimated nutrition (editable)</p>
+                <p className="text-xs text-[var(--color-text-secondary)] font-medium">
+                  Estimated nutrition (editable)
+                </p>
                 <div className="grid grid-cols-2 gap-2">
                   {(['protein', 'calories', 'carbs', 'fat'] as const).map((key) => (
                     <div key={key}>
-                      <label className="text-[10px] text-[var(--color-text-tertiary)] capitalize">{key}</label>
+                      <label className="text-[10px] text-[var(--color-text-tertiary)] capitalize">
+                        {key}
+                      </label>
                       <input
                         type="number"
                         value={outsideModal.result![key]}
                         onChange={(e) =>
                           setOutsideModal((m) => ({
                             ...m,
-                            result: m.result ? { ...m.result, [key]: parseFloat(e.target.value) || 0 } : null,
+                            result: m.result
+                              ? { ...m.result, [key]: parseFloat(e.target.value) || 0 }
+                              : null,
                           }))
                         }
                         className="w-full bg-[var(--color-surface-3)] text-white text-sm rounded-[var(--radius-sm)] px-2 py-1.5 outline-none mt-0.5"

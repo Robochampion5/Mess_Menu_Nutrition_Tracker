@@ -23,7 +23,10 @@ const PROTEIN_MULTIPLIERS: Record<ActivityLevel, number> = {
   very_active: 2.2,
 }
 
-function calcGoals(weightKg: number, activityLevel: ActivityLevel): { protein: number; calories: number } {
+function calcGoals(
+  weightKg: number,
+  activityLevel: ActivityLevel,
+): { protein: number; calories: number } {
   // Mifflin-St Jeor (approximated for male, conservative estimate)
   const bmr = 10 * weightKg + 500 // simplified
   const act = ACTIVITY_LEVELS.find((a) => a.value === activityLevel)?.multiplier ?? 1.55
@@ -82,7 +85,9 @@ export function Onboarding() {
             <Beef size={32} className="text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white">MessTrack</h1>
-          <p className="text-[var(--color-text-secondary)] text-sm mt-1">Your mess meal protein tracker</p>
+          <p className="text-[var(--color-text-secondary)] text-sm mt-1">
+            Your mess meal protein tracker
+          </p>
         </div>
 
         {/* Step indicator */}
@@ -103,7 +108,9 @@ export function Onboarding() {
               <h2 className="font-semibold text-white">About you</h2>
             </div>
             <div>
-              <label className="text-xs text-[var(--color-text-secondary)] block mb-1">Name (optional)</label>
+              <label className="text-xs text-[var(--color-text-secondary)] block mb-1">
+                Name (optional)
+              </label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -112,7 +119,9 @@ export function Onboarding() {
               />
             </div>
             <div>
-              <label className="text-xs text-[var(--color-text-secondary)] block mb-1">Body weight (kg)</label>
+              <label className="text-xs text-[var(--color-text-secondary)] block mb-1">
+                Body weight (kg)
+              </label>
               <input
                 type="number"
                 value={weight}
@@ -122,7 +131,9 @@ export function Onboarding() {
               />
             </div>
             <div>
-              <label className="text-xs text-[var(--color-text-secondary)] block mb-1">Activity level</label>
+              <label className="text-xs text-[var(--color-text-secondary)] block mb-1">
+                Activity level
+              </label>
               <div className="space-y-1.5">
                 {ACTIVITY_LEVELS.map((al) => (
                   <button
@@ -167,7 +178,9 @@ export function Onboarding() {
             )}
 
             <div>
-              <label className="text-xs text-[var(--color-text-secondary)] block mb-1">Daily protein goal (g)</label>
+              <label className="text-xs text-[var(--color-text-secondary)] block mb-1">
+                Daily protein goal (g)
+              </label>
               <input
                 type="number"
                 value={proteinGoal}
@@ -177,7 +190,9 @@ export function Onboarding() {
               />
             </div>
             <div>
-              <label className="text-xs text-[var(--color-text-secondary)] block mb-1">Daily calorie goal (kcal)</label>
+              <label className="text-xs text-[var(--color-text-secondary)] block mb-1">
+                Daily calorie goal (kcal)
+              </label>
               <input
                 type="number"
                 value={calorieGoal}
@@ -188,7 +203,9 @@ export function Onboarding() {
             </div>
 
             <div className="flex gap-2">
-              <Button variant="secondary" onClick={() => setStep(1)} className="flex-1">Back</Button>
+              <Button variant="secondary" onClick={() => setStep(1)} className="flex-1">
+                Back
+              </Button>
               <Button
                 onClick={() => setStep(3)}
                 className="flex-1"
@@ -210,8 +227,8 @@ export function Onboarding() {
             </div>
 
             <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-              Used for AI-powered menu parsing and nutrition estimates.
-              The key is stored only in your browser — never sent anywhere except the Gemini API.
+              Used for AI-powered menu parsing and nutrition estimates. The key is stored only in
+              your browser — never sent anywhere except the Gemini API.
             </p>
 
             <a
@@ -232,11 +249,14 @@ export function Onboarding() {
             />
 
             <p className="text-[10px] text-[var(--color-text-tertiary)]">
-              You can skip this and add it later in Settings. The app works without AI — menu parsing and nutrition estimates will fall back to manual entry.
+              You can skip this and add it later in Settings. The app works without AI — menu
+              parsing and nutrition estimates will fall back to manual entry.
             </p>
 
             <div className="flex gap-2">
-              <Button variant="secondary" onClick={() => setStep(2)} className="flex-1">Back</Button>
+              <Button variant="secondary" onClick={() => setStep(2)} className="flex-1">
+                Back
+              </Button>
               <Button onClick={finish} loading={saving} className="flex-1">
                 Get started
               </Button>

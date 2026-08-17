@@ -23,7 +23,9 @@ const sizeStyles: Record<string, string> = {
 
 export function Badge({ variant = 'neutral', children, size = 'md' }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center rounded-full font-medium ${styles[variant]} ${sizeStyles[size]}`}>
+    <span
+      className={`inline-flex items-center rounded-full font-medium ${styles[variant]} ${sizeStyles[size]}`}
+    >
       {children}
     </span>
   )

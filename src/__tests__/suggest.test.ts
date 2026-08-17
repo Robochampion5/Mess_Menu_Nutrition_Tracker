@@ -41,7 +41,7 @@ describe('suggestPlate', () => {
   })
 
   it('prioritizes highest protein-density items first', () => {
-    const egg = makeFood('egg', 13, 78, 'egg')  // density 0.167
+    const egg = makeFood('egg', 13, 78, 'egg') // density 0.167
     const rice = makeFood('rice', 3, 200, 'rice') // density 0.015
     const paneer = makeFood('paneer', 14, 100, 'paneer') // density 0.14
     const result = suggestPlate([rice, egg, paneer], 30, 600)

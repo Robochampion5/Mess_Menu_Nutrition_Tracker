@@ -34,11 +34,20 @@ interface ReviewItem {
 }
 
 function generateFoodId(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+  return name
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
 }
 
 export function Menu() {
-  const { foodItems, weeklyMenus, saveWeeklyMenu, upsertFoodItem: storeFoodItem, getWeeklyMenu } = useAppStore()
+  const {
+    foodItems,
+    weeklyMenus,
+    saveWeeklyMenu,
+    upsertFoodItem: storeFoodItem,
+    getWeeklyMenu,
+  } = useAppStore()
   const weekKey = getISOWeekKey()
   const [rawText, setRawText] = useState('')
   const [step, setStep] = useState<ImportStep>('paste')
@@ -74,7 +83,10 @@ export function Menu() {
     const dishNames = [...new Set(parsed.items.map((i) => i.dish))]
     const matchResult = await matchDishes(dishNames, foodItems)
 
-    const matchMap = new Map<string, { matchedId: string | null; confidence: number; isNew: boolean }>()
+    const matchMap = new Map<
+      string,
+      { matchedId: string | null; confidence: number; isNew: boolean }
+    >()
     if (matchResult.ok) {
       for (const m of matchResult.matches) {
         matchMap.set(m.input, { matchedId: m.matchedId, confidence: m.confidence, isNew: m.isNew })
@@ -95,17 +107,16 @@ export function Menu() {
 
     // Auto-estimate nutrition for new dishes
     const newItems = items.filter(
-      (item, i, arr) =>
-        item.isNew && arr.findIndex((x) => x.dish === item.dish) === i,
+      (item, i, arr) => item.isNew && arr.findIndex((x) => x.dish === item.dish) === i,
     )
 
     const estimatedItems = [...items]
     for (const newItem of newItems) {
       const idxEst = estimatedItems.findIndex((x) => x.dish === newItem.dish && x.isNew)
-        if (idxEst >= 0) {
-          const cur = estimatedItems[idxEst]!
-          estimatedItems[idxEst] = { ...cur, estimating: true }
-        }
+      if (idxEst >= 0) {
+        const cur = estimatedItems[idxEst]!
+        estimatedItems[idxEst] = { ...cur, estimating: true }
+      }
       const est = await estimateNutrition(newItem.dish)
       for (let i = 0; i < estimatedItems.length; i++) {
         if (estimatedItems[i]?.dish === newItem.dish && estimatedItems[i]?.isNew) {
@@ -159,7 +170,8 @@ export function Menu() {
       }
 
       // 2. Build menu items
-      const currentMenu = mergeMode === 'merge' ? (existingMenu ?? { weekKey, items: [] }) : { weekKey, items: [] }
+      const currentMenu =
+        mergeMode === 'merge' ? (existingMenu ?? { weekKey, items: [] }) : { weekKey, items: [] }
       const menuItems: WeeklyMenuItem[] = []
 
       for (const item of reviewItems) {
@@ -203,11 +215,13 @@ export function Menu() {
       return
     }
     await saveWeeklyMenu({ ...lastMenu, weekKey })
-    showToast('Last week\'s menu copied!', 'success')
+    showToast("Last week's menu copied!", 'success')
     setStep('done')
   }
 
-  const autoMatched = reviewItems.filter((r) => !r.isNew && r.confidence >= MATCH_CONFIDENCE_THRESHOLD)
+  const autoMatched = reviewItems.filter(
+    (r) => !r.isNew && r.confidence >= MATCH_CONFIDENCE_THRESHOLD,
+  )
   const needsReview = reviewItems.filter(
     (r) => r.isNew || r.confidence < MATCH_CONFIDENCE_THRESHOLD,
   )
@@ -243,18 +257,10 @@ export function Menu() {
           </Card>
 
           <div className="flex gap-3">
-            <Button
-              variant="secondary"
-              onClick={copyLastWeek}
-              className="flex-1"
-            >
+            <Button variant="secondary" onClick={copyLastWeek} className="flex-1">
               <Copy size={14} /> Copy last week
             </Button>
-            <Button
-              onClick={handleParse}
-              disabled={!rawText.trim()}
-              className="flex-1"
-            >
+            <Button onClick={handleParse} disabled={!rawText.trim()} className="flex-1">
               <ClipboardList size={14} /> Parse menu
             </Button>
           </div>
@@ -265,7 +271,9 @@ export function Menu() {
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <Spinner size="lg" />
           <p className="text-sm text-[var(--color-text-secondary)]">Parsing menu with AI…</p>
-          <p className="text-xs text-[var(--color-text-tertiary)]">Matching dishes against your food database</p>
+          <p className="text-xs text-[var(--color-text-tertiary)]">
+            Matching dishes against your food database
+          </p>
         </div>
       )}
 
@@ -278,8 +286,8 @@ export function Menu() {
                 <div>
                   <p className="text-sm font-medium text-white">This week already has a menu</p>
                   <p className="text-xs text-[var(--color-text-secondary)] mt-1">
-                    Your existing logs won't be deleted. Items no longer in the new menu will show as
-                    "custom entry" in history.
+                    Your existing logs won't be deleted. Items no longer in the new menu will show
+                    as "custom entry" in history.
                   </p>
                 </div>
               </div>
@@ -325,11 +333,17 @@ export function Menu() {
                           <div className="flex items-center gap-2">
                             <span className="text-sm text-white truncate">{item.dish}</span>
                             {item.isNew ? (
-                              <Badge variant="warning" size="sm">New</Badge>
+                              <Badge variant="warning" size="sm">
+                                New
+                              </Badge>
                             ) : item.confidence >= MATCH_CONFIDENCE_THRESHOLD ? (
-                              <Badge variant="success" size="sm">✓ Matched</Badge>
+                              <Badge variant="success" size="sm">
+                                ✓ Matched
+                              </Badge>
                             ) : (
-                              <Badge variant="warning" size="sm">Low confidence</Badge>
+                              <Badge variant="warning" size="sm">
+                                Low confidence
+                              </Badge>
                             )}
                           </div>
                           <p className="text-xs text-[var(--color-text-tertiary)] capitalize">
@@ -339,11 +353,14 @@ export function Menu() {
                             )}
                           </p>
                           {item.isNew && item.estimating && (
-                            <span className="text-xs text-[var(--color-text-tertiary)]">Estimating nutrition…</span>
+                            <span className="text-xs text-[var(--color-text-tertiary)]">
+                              Estimating nutrition…
+                            </span>
                           )}
                           {item.isNew && item.newNutrition && (
                             <p className="text-xs text-amber-400 mt-0.5">
-                              ~{item.newNutrition.protein}g protein · {item.newNutrition.calories} kcal
+                              ~{item.newNutrition.protein}g protein · {item.newNutrition.calories}{' '}
+                              kcal
                             </p>
                           )}
                         </div>
@@ -375,7 +392,13 @@ export function Menu() {
           <p className="text-sm text-[var(--color-text-secondary)]">
             Your weekly menu is ready. Go to Log to start recording meals.
           </p>
-          <Button onClick={() => { setStep('paste'); setRawText(''); setReviewItems([]) }}>
+          <Button
+            onClick={() => {
+              setStep('paste')
+              setRawText('')
+              setReviewItems([])
+            }}
+          >
             Import another
           </Button>
         </div>

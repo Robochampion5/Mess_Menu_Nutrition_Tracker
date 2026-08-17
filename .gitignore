@@ -38,3 +38,10 @@ coverage/
 
 # TypeScript cache
 *.tsbuildinfo
+
+# ESLint
+.eslintcache
+
+# Deployment / Hosting
+.vercel/
+.netlify/

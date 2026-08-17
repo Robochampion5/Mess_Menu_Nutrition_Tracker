@@ -42,11 +42,19 @@ export function FoodForm({ item, onChange, onSave, onCancel }: FoodFormProps) {
         />
       </div>
       <div>
-        <label className="text-xs text-[var(--color-text-secondary)]">Aliases (comma-separated)</label>
+        <label className="text-xs text-[var(--color-text-secondary)]">
+          Aliases (comma-separated)
+        </label>
         <input
           value={(item.aliases ?? []).join(', ')}
           onChange={(e) =>
-            onChange({ ...item, aliases: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) })
+            onChange({
+              ...item,
+              aliases: e.target.value
+                .split(',')
+                .map((s) => s.trim())
+                .filter(Boolean),
+            })
           }
           placeholder="e.g. yellow dal, toor dal"
           className="w-full bg-[var(--color-surface-2)] text-white rounded-[var(--radius-md)] px-3 py-2 text-sm outline-none mt-0.5"

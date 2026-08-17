@@ -10,7 +10,14 @@ import { deleteFoodItem } from '../db/foodItems'
 import type { FoodItem, FoodCategory, CuisineTag } from '../types'
 
 function generateId(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-' + Date.now()
+  return (
+    name
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '') +
+    '-' +
+    Date.now()
+  )
 }
 
 const emptyFood = (): Omit<FoodItem, 'id'> => ({
@@ -78,7 +85,9 @@ export function Foods() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-white">Foods</h1>
-            <p className="text-sm text-[var(--color-text-secondary)] mt-0.5">{foodItems.length} items</p>
+            <p className="text-sm text-[var(--color-text-secondary)] mt-0.5">
+              {foodItems.length} items
+            </p>
           </div>
           <Button size="sm" onClick={() => setShowAdd(true)}>
             <Plus size={14} /> Add
@@ -87,7 +96,10 @@ export function Foods() {
 
         {/* Search */}
         <div className="relative mt-4">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-tertiary)]" />
+          <Search
+            size={14}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-tertiary)]"
+          />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -129,13 +141,18 @@ export function Foods() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-white truncate">{item.name}</span>
-                      {item.isCustom && <Badge variant="neutral" size="sm">Custom</Badge>}
+                      {item.isCustom && (
+                        <Badge variant="neutral" size="sm">
+                          Custom
+                        </Badge>
+                      )}
                     </div>
                     <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
                       <span style={{ color: '#ff375f' }}>{item.proteinPer}g P</span>
                       {' · '}
                       <span style={{ color: '#30d158' }}>{item.caloriesPer} kcal</span>
-                      {' · '}{item.servingUnit}
+                      {' · '}
+                      {item.servingUnit}
                     </p>
                   </div>
                   <div className="flex items-center gap-1 ml-2">
@@ -172,7 +189,9 @@ export function Foods() {
                     <p className="text-[10px] text-[var(--color-text-tertiary)] mb-1.5">Aliases</p>
                     <div className="flex flex-wrap gap-1.5">
                       {item.aliases.map((alias) => (
-                        <Badge key={alias} variant="neutral" size="sm">{alias}</Badge>
+                        <Badge key={alias} variant="neutral" size="sm">
+                          {alias}
+                        </Badge>
                       ))}
                     </div>
                   </div>
@@ -185,7 +204,9 @@ export function Foods() {
         {filtered.length === 0 && (
           <div className="text-center py-12">
             <p className="text-[var(--color-text-secondary)]">No foods found</p>
-            <p className="text-xs text-[var(--color-text-tertiary)] mt-1">Try a different search or add a new item</p>
+            <p className="text-xs text-[var(--color-text-tertiary)] mt-1">
+              Try a different search or add a new item
+            </p>
           </div>
         )}
       </div>

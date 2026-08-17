@@ -62,8 +62,14 @@ export function Settings() {
       const text = await file.text()
       const data = JSON.parse(text)
       if (data.foods) await bulkUpsertFoodItems(data.foods)
-      if (data.menus) await Promise.all(data.menus.map((m: Parameters<typeof saveWeeklyMenu>[0]) => saveWeeklyMenu(m)))
-      if (data.logs) await Promise.all(data.logs.map((l: Parameters<typeof upsertDailyLog>[0]) => upsertDailyLog(l)))
+      if (data.menus)
+        await Promise.all(
+          data.menus.map((m: Parameters<typeof saveWeeklyMenu>[0]) => saveWeeklyMenu(m)),
+        )
+      if (data.logs)
+        await Promise.all(
+          data.logs.map((l: Parameters<typeof upsertDailyLog>[0]) => upsertDailyLog(l)),
+        )
       showToast('Import complete! Reload to see changes.', 'success')
       setTimeout(() => window.location.reload(), 1500)
     } catch {
@@ -104,7 +110,9 @@ export function Settings() {
               />
             </div>
             <div>
-              <label className="text-xs text-[var(--color-text-secondary)]">Calories (kcal/day)</label>
+              <label className="text-xs text-[var(--color-text-secondary)]">
+                Calories (kcal/day)
+              </label>
               <input
                 type="number"
                 value={calorieGoal}
@@ -113,7 +121,9 @@ export function Settings() {
               />
             </div>
           </div>
-          <Button fullWidth onClick={handleSaveGoals} loading={saving}>Save goals</Button>
+          <Button fullWidth onClick={handleSaveGoals} loading={saving}>
+            Save goals
+          </Button>
         </Card>
 
         {/* API Key */}
@@ -124,9 +134,9 @@ export function Settings() {
           </div>
           <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
             Your key is stored only in your browser (IndexedDB). It's used exclusively for menu
-            parsing and nutrition estimates — sent directly to the Gemini API, never to any other server.
-            Both IndexedDB and localStorage are plain JS-readable storage; the privacy guarantee is
-            simply that your key never leaves your device except to Google's AI API.
+            parsing and nutrition estimates — sent directly to the Gemini API, never to any other
+            server. Both IndexedDB and localStorage are plain JS-readable storage; the privacy
+            guarantee is simply that your key never leaves your device except to Google's AI API.
           </p>
           <a
             href="https://aistudio.google.com/app/apikey"
@@ -170,7 +180,7 @@ export function Settings() {
             <Button fullWidth variant="secondary" onClick={handleExport}>
               <Download size={14} /> Export
             </Button>
-          <label className="flex-1 cursor-pointer">
+            <label className="flex-1 cursor-pointer">
               <div className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium bg-[var(--color-surface-2)] text-white rounded-[var(--radius-md)] hover:bg-[var(--color-surface-3)] transition-colors">
                 <Upload size={14} /> Import
               </div>
@@ -183,7 +193,8 @@ export function Settings() {
         <Card className="space-y-3 border border-red-500/20">
           <h2 className="font-semibold text-red-400">Danger zone</h2>
           <p className="text-xs text-[var(--color-text-secondary)]">
-            Permanently delete all data including food database, menus, and logs. This cannot be undone.
+            Permanently delete all data including food database, menus, and logs. This cannot be
+            undone.
           </p>
           <Button fullWidth variant="danger" onClick={handleReset}>
             <Trash2 size={14} /> Reset all data

@@ -97,7 +97,10 @@ export function ActivityRings({ protein, calories, carbs, size = 220 }: Activity
   const calPct = calories.goal > 0 ? Math.min(1, calories.value / calories.goal) : 0
 
   return (
-    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+    <div
+      className="relative flex items-center justify-center"
+      style={{ width: size, height: size }}
+    >
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
         {/* Carbs — outermost */}
         <Ring
@@ -130,10 +133,7 @@ export function ActivityRings({ protein, calories, carbs, size = 220 }: Activity
 
       {/* Center text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-        <span
-          className="text-4xl font-bold tabular-nums"
-          style={{ color: protein.color }}
-        >
+        <span className="text-4xl font-bold tabular-nums" style={{ color: protein.color }}>
           {Math.round(protein.value)}
         </span>
         <span className="text-xs text-[var(--color-text-secondary)] mt-0.5">
@@ -154,10 +154,7 @@ export function ActivityRings({ protein, calories, carbs, size = 220 }: Activity
         </div>
 
         {/* Protein % label */}
-        <div
-          className="mt-1 text-[10px] font-semibold"
-          style={{ color: protein.color }}
-        >
+        <div className="mt-1 text-[10px] font-semibold" style={{ color: protein.color }}>
           {Math.round(proteinPct * 100)}%
         </div>
       </div>

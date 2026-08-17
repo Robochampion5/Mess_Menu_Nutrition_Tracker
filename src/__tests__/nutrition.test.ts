@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { entryMacros, logMacros, sumMacros, percentComplete, remaining, roundMacro } from '../utils/nutrition'
+import {
+  entryMacros,
+  logMacros,
+  sumMacros,
+  percentComplete,
+  remaining,
+  roundMacro,
+} from '../utils/nutrition'
 import type { FoodItem, DailyLogRecord, DailyLogEntry } from '../types'
 
 function makeFood(overrides: Partial<FoodItem> = {}): FoodItem {
@@ -29,7 +36,10 @@ function makeEntry(overrides: Partial<DailyLogEntry> = {}): DailyLogEntry {
   }
 }
 
-function makeLog(entries: DailyLogEntry[], status: DailyLogRecord['status'] = 'ate'): DailyLogRecord {
+function makeLog(
+  entries: DailyLogEntry[],
+  status: DailyLogRecord['status'] = 'ate',
+): DailyLogRecord {
   return {
     date: '2024-01-01',
     mealSlot: 'lunch',

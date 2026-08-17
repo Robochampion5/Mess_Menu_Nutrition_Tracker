@@ -63,8 +63,8 @@ export function WeeklyChart({ data, proteinGoal }: WeeklyChartProps) {
               color: '#fff',
               fontSize: 12,
             }}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          formatter={(value: any) => [`${value}g`, 'Protein'] as any}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            formatter={(value: any) => [`${value}g`, 'Protein'] as any}
           />
           <Bar dataKey="protein" radius={[4, 4, 0, 0]} maxBarSize={28}>
             {chartData.map((entry) => (
