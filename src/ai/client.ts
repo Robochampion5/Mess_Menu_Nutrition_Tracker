@@ -23,4 +23,4 @@ export async function getGeminiClient(): Promise<GoogleGenAI | null> {
   return cachedClient
 }
 
-export const GEMINI_MODEL = 'gemini-2.0-flash'
+export const GEMINI_MODEL = 'gemini-3.6-flash'
