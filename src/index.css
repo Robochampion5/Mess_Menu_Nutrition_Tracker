@@ -1,35 +1,58 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
 /* ── Design Tokens ─────────────────────────────────────────────────── */
 :root {
-  /* Apple Fitness palette */
+  /* Apple Fitness ring palette — ONLY saturated colours in the app */
   --color-protein: #ff375f;
   --color-calories: #30d158;
   --color-carbs: #0a84ff;
 
-  /* Surfaces */
+  /* Surfaces — layered dark material */
   --color-bg: #000000;
-  --color-surface: #1c1c1e;
-  --color-surface-2: #2c2c2e;
-  --color-surface-3: #3a3a3c;
-  --color-border: #38383a;
+  --color-surface: #141414;
+  --color-surface-2: #1e1e1e;
+  --color-surface-3: #2a2a2a;
+  --color-surface-4: #333333;
+  --color-border: #2a2a2a;
+  --color-border-subtle: #1e1e1e;
 
   /* Text */
-  --color-text: #ffffff;
+  --color-text: #f5f5f5;
   --color-text-secondary: #8e8e93;
-  --color-text-tertiary: #636366;
+  --color-text-tertiary: #48484a;
 
-  /* Accent */
+  /* Accent aliases (keep for compatibility) */
   --color-accent: #ff375f;
   --color-accent-green: #30d158;
   --color-accent-blue: #0a84ff;
   --color-accent-orange: #ff9f0a;
 
+  /* Elevation shadows — card layering system */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);
+  --shadow-card-raised: 0 8px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+  --shadow-glow-protein: 0 0 20px rgba(255,55,95,0.25);
+  --shadow-glow-calories: 0 0 20px rgba(48,209,88,0.2);
+  --shadow-glow-carbs: 0 0 20px rgba(10,132,255,0.2);
+  --shadow-drawer: 4px 0 40px rgba(0,0,0,0.8);
+
   /* Spacing & radius */
+  --radius-xs: 6px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 20px;
+  --radius-2xl: 24px;
+
+  /* Sidebar layout */
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 64px;
+  --sidebar-transition: width 0.25s cubic-bezier(0.4,0,0.2,1);
+
+  /* Typography */
+  --font-display: 'Manrope', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
 }
 
 /* ── Reset & Base ────────────────────────────────────────────────────── */
@@ -44,17 +67,13 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Safe areas for iOS notch / home bar */
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
-    env(safe-area-inset-left);
 }
 
 body {
   margin: 0;
   background: var(--color-bg);
   color: var(--color-text);
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--font-body);
   min-height: 100dvh;
   overscroll-behavior: none;
 }
@@ -65,27 +84,96 @@ body {
   flex-direction: column;
 }
 
+/* ── Typography Scale ────────────────────────────────────────────────── */
+.font-display { font-family: var(--font-display); }
+
+/* Big numbers — protein grams, PR weights, etc. */
+.num-hero {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.num-large {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
 /* ── Ring Animation ──────────────────────────────────────────────────── */
 @keyframes ring-fill {
-  from {
-    stroke-dashoffset: var(--ring-circumference);
-  }
-  to {
-    stroke-dashoffset: var(--ring-target-offset);
-  }
+  from { stroke-dashoffset: var(--ring-circumference); }
+  to   { stroke-dashoffset: var(--ring-target-offset); }
 }
 
 .ring-animated {
   animation: ring-fill 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+/* ── Skeleton Shimmer ────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-2) 25%,
+    var(--color-surface-3) 50%,
+    var(--color-surface-2) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+/* ── PR Badge glow animation ─────────────────────────────────────────── */
+@keyframes pr-pop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.pr-badge {
+  animation: pr-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Micro-interactions ──────────────────────────────────────────────── */
+@keyframes stepper-tap {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.85); }
+  100% { transform: scale(1); }
+}
+
+.stepper-tap {
+  animation: stepper-tap 0.18s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Route transition */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter {
+  animation: page-in 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ── Sidebar Overlay Backdrop ────────────────────────────────────────── */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
 /* ── Scrollbar (hide for mobile feel) ───────────────────────────────── */
-::-webkit-scrollbar {
-  display: none;
-}
-* {
-  scrollbar-width: none;
-}
+::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; }
 
 /* ── Focus visible (accessibility) ──────────────────────────────────── */
 :focus-visible {
@@ -97,4 +185,12 @@ body {
 /* ── Transitions ─────────────────────────────────────────────────────── */
 .transition-default {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Glass surface ───────────────────────────────────────────────────── */
+.glass {
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.06);
 }

@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react'
-import { Search, Plus, Edit2, Trash2, ChevronDown, ChevronUp } from 'lucide-react'
+import { Search, Plus, Edit2, Trash2, ChevronDown, ChevronUp, Database } from 'lucide-react'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { Badge } from '../components/ui/Badge'
 import { FoodForm } from '../components/ui/FoodForm'
+import { EmptyState } from '../components/ui/EmptyState'
 import { showToast } from '../components/ui/Toast'
 import { useAppStore } from '../store/useAppStore'
 import { deleteFoodItem } from '../db/foodItems'
@@ -80,11 +81,11 @@ export function Foods() {
   }
 
   return (
-    <div className="flex-1 pb-24 overflow-y-auto">
+    <div className="flex-1 pb-8 overflow-y-auto">
       <div className="px-4 pt-6 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white">Foods</h1>
+            <h1 className="text-2xl font-bold text-white font-display tracking-tight">Foods</h1>
             <p className="text-sm text-[var(--color-text-secondary)] mt-0.5">
               {foodItems.length} items
             </p>
@@ -202,12 +203,16 @@ export function Foods() {
         ))}
 
         {filtered.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-[var(--color-text-secondary)]">No foods found</p>
-            <p className="text-xs text-[var(--color-text-tertiary)] mt-1">
-              Try a different search or add a new item
-            </p>
-          </div>
+          <EmptyState
+            icon={query ? Search : Database}
+            title={query ? 'No foods found' : 'No foods yet'}
+            description={
+              query
+                ? `No results for "${query}" — try a different term or add a new item.`
+                : 'Your food database is empty. Add a custom food to get started.'
+            }
+            action={{ label: 'Add Food', onClick: () => setShowAdd(true) }}
+          />
         )}
       </div>
     </div>

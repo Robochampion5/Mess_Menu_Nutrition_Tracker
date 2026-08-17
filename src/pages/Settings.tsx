@@ -8,6 +8,9 @@ import { getAllFoodItems, bulkUpsertFoodItems } from '../db/foodItems'
 import { getAllWeeklyMenus, saveWeeklyMenu } from '../db/weeklyMenus'
 import { getAllLogs, upsertDailyLog } from '../db/dailyLogs'
 import { saveGeminiKey } from '../db/userProfile'
+import { getAllSessions, saveSession } from '../db/workoutSessions'
+import { getAllRecords, saveRecord } from '../db/personalRecords'
+import { getAllExercises, bulkUpsertExercises } from '../db/exercises'
 
 export function Settings() {
   const { profile, saveProfile } = useAppStore()
@@ -39,12 +42,24 @@ export function Settings() {
   }
 
   async function handleExport() {
-    const [foods, menus, logs] = await Promise.all([
+    const [foods, menus, logs, sessions, records, exercises] = await Promise.all([
       getAllFoodItems(),
       getAllWeeklyMenus(),
       getAllLogs(),
+      getAllSessions(),
+      getAllRecords(),
+      getAllExercises(),
     ])
-    const data = { version: 1, exportedAt: new Date().toISOString(), foods, menus, logs }
+    const data = {
+      version: 2,
+      exportedAt: new Date().toISOString(),
+      foods,
+      menus,
+      logs,
+      workoutSessions: sessions,
+      personalRecords: records,
+      exercises: exercises.filter((e) => e.isCustom), // only export custom exercises
+    }
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -70,6 +85,17 @@ export function Settings() {
         await Promise.all(
           data.logs.map((l: Parameters<typeof upsertDailyLog>[0]) => upsertDailyLog(l)),
         )
+      // v2 workout data
+      if (data.workoutSessions)
+        await Promise.all(
+          data.workoutSessions.map((s: Parameters<typeof saveSession>[0]) => saveSession(s)),
+        )
+      if (data.personalRecords)
+        await Promise.all(
+          data.personalRecords.map((r: Parameters<typeof saveRecord>[0]) => saveRecord(r)),
+        )
+      if (data.exercises)
+        await bulkUpsertExercises(data.exercises)
       showToast('Import complete! Reload to see changes.', 'success')
       setTimeout(() => window.location.reload(), 1500)
     } catch {
@@ -87,9 +113,9 @@ export function Settings() {
   }
 
   return (
-    <div className="flex-1 pb-24 overflow-y-auto">
+    <div className="flex-1 pb-8 overflow-y-auto">
       <div className="px-4 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-white">Settings</h1>
+        <h1 className="text-2xl font-bold text-white font-display tracking-tight">Settings</h1>
       </div>
 
       <div className="px-4 space-y-4">
@@ -174,7 +200,8 @@ export function Settings() {
             <h2 className="font-semibold text-white">Backup & restore</h2>
           </div>
           <p className="text-xs text-[var(--color-text-secondary)]">
-            Export your food database, menus, and logs as a JSON file. Import it back on any device.
+            Export your food database, menus, logs, and workout data as a JSON file. Import it back
+            on any device to restore everything in one step.
           </p>
           <div className="flex gap-2">
             <Button fullWidth variant="secondary" onClick={handleExport}>

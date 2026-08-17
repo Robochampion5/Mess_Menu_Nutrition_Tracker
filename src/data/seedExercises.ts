@@ -1,0 +1,74 @@
+import type { Exercise } from '../types'
+
+export const SEED_EXERCISES: Exercise[] = [
+  // ── PUSH ──────────────────────────────────────────────────────────────
+  { id: 'ex-bench-press', name: 'Bench Press', category: 'push', muscleGroups: ['chest', 'triceps', 'front delts'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-incline-bench', name: 'Incline Bench Press', category: 'push', muscleGroups: ['upper chest', 'front delts', 'triceps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-decline-bench', name: 'Decline Bench Press', category: 'push', muscleGroups: ['lower chest', 'triceps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-overhead-press', name: 'Overhead Press (OHP)', category: 'push', muscleGroups: ['shoulders', 'triceps', 'upper traps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-dumbbell-press', name: 'Dumbbell Chest Press', category: 'push', muscleGroups: ['chest', 'triceps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-incline-db-press', name: 'Incline Dumbbell Press', category: 'push', muscleGroups: ['upper chest', 'front delts'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-lateral-raise', name: 'Lateral Raise', category: 'push', muscleGroups: ['side delts'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-front-raise', name: 'Front Raise', category: 'push', muscleGroups: ['front delts'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-tricep-pushdown', name: 'Tricep Pushdown', category: 'push', muscleGroups: ['triceps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-skull-crusher', name: 'Skull Crusher', category: 'push', muscleGroups: ['triceps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-dip', name: 'Dip', category: 'push', muscleGroups: ['chest', 'triceps', 'front delts'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-push-up', name: 'Push-up', category: 'push', muscleGroups: ['chest', 'triceps', 'front delts'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-cable-fly', name: 'Cable Fly', category: 'push', muscleGroups: ['chest'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-pec-deck', name: 'Pec Deck (Machine Fly)', category: 'push', muscleGroups: ['chest'], trackingType: 'sets_reps_weight' },
+
+  // ── PULL ──────────────────────────────────────────────────────────────
+  { id: 'ex-pull-up', name: 'Pull-up', category: 'pull', muscleGroups: ['lats', 'biceps', 'rear delts'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-chin-up', name: 'Chin-up', category: 'pull', muscleGroups: ['lats', 'biceps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-lat-pulldown', name: 'Lat Pulldown', category: 'pull', muscleGroups: ['lats', 'biceps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-barbell-row', name: 'Barbell Row', category: 'pull', muscleGroups: ['lats', 'rhomboids', 'traps', 'biceps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-dumbbell-row', name: 'Dumbbell Row', category: 'pull', muscleGroups: ['lats', 'rhomboids', 'biceps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-cable-row', name: 'Seated Cable Row', category: 'pull', muscleGroups: ['lats', 'rhomboids', 'traps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-face-pull', name: 'Face Pull', category: 'pull', muscleGroups: ['rear delts', 'external rotators', 'traps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-bicep-curl', name: 'Bicep Curl', category: 'pull', muscleGroups: ['biceps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-hammer-curl', name: 'Hammer Curl', category: 'pull', muscleGroups: ['biceps', 'brachialis'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-preacher-curl', name: 'Preacher Curl', category: 'pull', muscleGroups: ['biceps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-shrug', name: 'Barbell Shrug', category: 'pull', muscleGroups: ['traps'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-deadlift', name: 'Deadlift', category: 'pull', muscleGroups: ['hamstrings', 'glutes', 'lats', 'traps', 'spinal erectors'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-rdl', name: 'Romanian Deadlift (RDL)', category: 'pull', muscleGroups: ['hamstrings', 'glutes', 'lats'], trackingType: 'sets_reps_weight' },
+
+  // ── LEGS ──────────────────────────────────────────────────────────────
+  { id: 'ex-squat', name: 'Back Squat', category: 'legs', muscleGroups: ['quads', 'glutes', 'hamstrings', 'core'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-front-squat', name: 'Front Squat', category: 'legs', muscleGroups: ['quads', 'core'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-leg-press', name: 'Leg Press', category: 'legs', muscleGroups: ['quads', 'glutes', 'hamstrings'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-hack-squat', name: 'Hack Squat', category: 'legs', muscleGroups: ['quads', 'glutes'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-lunge', name: 'Lunge', category: 'legs', muscleGroups: ['quads', 'glutes', 'hamstrings'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-bulgarian-split', name: 'Bulgarian Split Squat', category: 'legs', muscleGroups: ['quads', 'glutes', 'hamstrings'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-leg-curl', name: 'Leg Curl', category: 'legs', muscleGroups: ['hamstrings'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-leg-extension', name: 'Leg Extension', category: 'legs', muscleGroups: ['quads'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-calf-raise', name: 'Calf Raise', category: 'legs', muscleGroups: ['calves'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-goblet-squat', name: 'Goblet Squat', category: 'legs', muscleGroups: ['quads', 'glutes', 'core'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-hip-thrust', name: 'Hip Thrust', category: 'legs', muscleGroups: ['glutes', 'hamstrings'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-sumo-deadlift', name: 'Sumo Deadlift', category: 'legs', muscleGroups: ['glutes', 'hamstrings', 'quads', 'lats'], trackingType: 'sets_reps_weight' },
+
+  // ── CORE ──────────────────────────────────────────────────────────────
+  { id: 'ex-plank', name: 'Plank', category: 'core', muscleGroups: ['abs', 'obliques', 'spinal erectors'], trackingType: 'duration' },
+  { id: 'ex-side-plank', name: 'Side Plank', category: 'core', muscleGroups: ['obliques', 'abs'], trackingType: 'duration' },
+  { id: 'ex-crunch', name: 'Crunch', category: 'core', muscleGroups: ['abs'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-cable-crunch', name: 'Cable Crunch', category: 'core', muscleGroups: ['abs'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-leg-raise', name: 'Hanging Leg Raise', category: 'core', muscleGroups: ['abs', 'hip flexors'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-russian-twist', name: 'Russian Twist', category: 'core', muscleGroups: ['obliques', 'abs'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-ab-wheel', name: 'Ab Wheel Rollout', category: 'core', muscleGroups: ['abs', 'lats', 'shoulders'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-hollow-body', name: 'Hollow Body Hold', category: 'core', muscleGroups: ['abs'], trackingType: 'duration' },
+
+  // ── CARDIO ────────────────────────────────────────────────────────────
+  { id: 'ex-running', name: 'Running', category: 'cardio', muscleGroups: ['legs', 'cardiovascular'], trackingType: 'distance_duration' },
+  { id: 'ex-cycling', name: 'Cycling', category: 'cardio', muscleGroups: ['legs', 'cardiovascular'], trackingType: 'distance_duration' },
+  { id: 'ex-rowing', name: 'Rowing Machine', category: 'cardio', muscleGroups: ['back', 'legs', 'cardiovascular'], trackingType: 'distance_duration' },
+  { id: 'ex-jump-rope', name: 'Jump Rope', category: 'cardio', muscleGroups: ['calves', 'cardiovascular'], trackingType: 'duration' },
+  { id: 'ex-swimming', name: 'Swimming', category: 'cardio', muscleGroups: ['full body', 'cardiovascular'], trackingType: 'distance_duration' },
+  { id: 'ex-elliptical', name: 'Elliptical', category: 'cardio', muscleGroups: ['legs', 'cardiovascular'], trackingType: 'duration' },
+  { id: 'ex-stair-master', name: 'StairMaster', category: 'cardio', muscleGroups: ['glutes', 'quads', 'cardiovascular'], trackingType: 'duration' },
+  { id: 'ex-hiit', name: 'HIIT (General)', category: 'cardio', muscleGroups: ['full body', 'cardiovascular'], trackingType: 'duration' },
+
+  // ── OTHER ─────────────────────────────────────────────────────────────
+  { id: 'ex-clean', name: 'Power Clean', category: 'other', muscleGroups: ['full body', 'traps', 'legs'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-snatch', name: 'Snatch', category: 'other', muscleGroups: ['full body', 'shoulders'], trackingType: 'sets_reps_weight' },
+  { id: 'ex-battle-ropes', name: 'Battle Ropes', category: 'other', muscleGroups: ['shoulders', 'arms', 'cardiovascular'], trackingType: 'duration' },
+  { id: 'ex-farmers-carry', name: "Farmer's Carry", category: 'other', muscleGroups: ['grip', 'traps', 'core', 'legs'], trackingType: 'distance_duration' },
+]

@@ -1,24 +1,48 @@
 import { create } from 'zustand'
-import type { FoodItem, WeeklyMenu, DailyLogRecord, UserProfile, MealSlot } from '../types'
+import type {
+  FoodItem,
+  WeeklyMenu,
+  DailyLogRecord,
+  UserProfile,
+  MealSlot,
+  Exercise,
+  WorkoutSession,
+  PersonalRecord,
+} from '../types'
 import { getAllFoodItems, upsertFoodItem, bulkUpsertFoodItems } from '../db/foodItems'
 import { getWeeklyMenu, saveWeeklyMenu } from '../db/weeklyMenus'
 import { upsertDailyLog, getLogsForDate } from '../db/dailyLogs'
 import { getProfile, saveProfile } from '../db/userProfile'
+import { getAllExercises, upsertExercise, bulkUpsertExercises } from '../db/exercises'
+import {
+  saveSession,
+  getAllSessions,
+  getSessionsForDate as dbGetSessionsForDate,
+  deleteSession,
+} from '../db/workoutSessions'
+import { getAllRecords, saveRecord } from '../db/personalRecords'
 import { SEED_FOODS } from '../data/seedFoods'
+import { SEED_EXERCISES } from '../data/seedExercises'
 import { toDateString, getISOWeekKey } from '../utils/weekKey'
+import { derivePRsFromSession } from '../utils/workout'
 
 interface AppState {
-  // Data
+  // ── Nutrition ──
   foodItems: FoodItem[]
   weeklyMenus: Map<string, WeeklyMenu>
   dailyLogs: Map<string, DailyLogRecord> // key: `${date}::${slot}`
   profile: UserProfile | null
 
-  // UI state
+  // ── Workout ──
+  exercises: Exercise[]
+  workoutSessions: WorkoutSession[] // all sessions, newest-first
+  personalRecords: Map<string, PersonalRecord> // key: exerciseId
+
+  // ── UI state ──
   selectedDate: string
   isHydrated: boolean
 
-  // Actions
+  // ── Nutrition actions ──
   hydrate: () => Promise<void>
   upsertFoodItem: (item: FoodItem) => Promise<void>
   saveWeeklyMenu: (menu: WeeklyMenu) => Promise<void>
@@ -27,6 +51,13 @@ interface AppState {
   getDailyLogsForDate: (date: string) => Promise<DailyLogRecord[]>
   saveProfile: (profile: UserProfile) => Promise<void>
   setSelectedDate: (date: string) => void
+
+  // ── Workout actions ──
+  upsertExercise: (exercise: Exercise) => Promise<void>
+  saveWorkoutSession: (session: WorkoutSession) => Promise<PersonalRecord[]>
+  deleteWorkoutSession: (id: string) => Promise<void>
+  getSessionsForDate: (date: string) => Promise<WorkoutSession[]>
+  refreshSessions: () => Promise<void>
 }
 
 function logKey(date: string, slot: MealSlot): string {
@@ -38,12 +69,15 @@ export const useAppStore = create<AppState>((set, get) => ({
   weeklyMenus: new Map(),
   dailyLogs: new Map(),
   profile: null,
+  exercises: [],
+  workoutSessions: [],
+  personalRecords: new Map(),
   selectedDate: toDateString(),
   isHydrated: false,
 
   hydrate: async () => {
     // Load profile
-    let profile = await getProfile()
+    const profile = await getProfile()
 
     // Seed food database if empty
     let foodItems = await getAllFoodItems()
@@ -52,7 +86,14 @@ export const useAppStore = create<AppState>((set, get) => ({
       foodItems = SEED_FOODS
     }
 
-    // Load today's logs
+    // Seed exercise database if empty
+    let exercises = await getAllExercises()
+    if (exercises.length === 0) {
+      await bulkUpsertExercises(SEED_EXERCISES)
+      exercises = SEED_EXERCISES
+    }
+
+    // Load today's nutrition logs
     const today = toDateString()
     const todayLogs = await getLogsForDate(today)
     const logsMap = new Map<string, DailyLogRecord>()
@@ -66,14 +107,27 @@ export const useAppStore = create<AppState>((set, get) => ({
     const menusMap = new Map<string, WeeklyMenu>()
     if (weekMenu) menusMap.set(weekKey, weekMenu)
 
+    // Load workout sessions (all, for history) and personal records
+    const sessions = await getAllSessions()
+    const records = await getAllRecords()
+    const recordsMap = new Map<string, PersonalRecord>()
+    for (const r of records) {
+      recordsMap.set(r.exerciseId, r)
+    }
+
     set({
       profile: profile ?? null,
       foodItems,
       dailyLogs: logsMap,
       weeklyMenus: menusMap,
+      exercises,
+      workoutSessions: sessions,
+      personalRecords: recordsMap,
       isHydrated: true,
     })
   },
+
+  // ── Nutrition ──────────────────────────────────────────────────────────
 
   upsertFoodItem: async (item) => {
     await upsertFoodItem(item)
@@ -131,4 +185,58 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   setSelectedDate: (date) => set({ selectedDate: date }),
+
+  // ── Workout ────────────────────────────────────────────────────────────
+
+  upsertExercise: async (exercise) => {
+    await upsertExercise(exercise)
+    const all = await getAllExercises()
+    set({ exercises: all })
+  },
+
+  saveWorkoutSession: async (session) => {
+    // 1. Persist session
+    await saveSession(session)
+
+    // 2. Detect new PRs
+    const { exercises, personalRecords } = get()
+    const newPRs = derivePRsFromSession(session, exercises, personalRecords)
+
+    // 3. Persist new PRs and update in-memory map
+    if (newPRs.length > 0) {
+      await Promise.all(newPRs.map((r) => saveRecord(r)))
+      set((state) => {
+        const newMap = new Map(state.personalRecords)
+        for (const r of newPRs) newMap.set(r.exerciseId, r)
+        return { personalRecords: newMap }
+      })
+    }
+
+    // 4. Update sessions list (prepend, keep sorted newest-first)
+    set((state) => {
+      const filtered = state.workoutSessions.filter((s) => s.id !== session.id)
+      return { workoutSessions: [session, ...filtered] }
+    })
+
+    return newPRs
+  },
+
+  deleteWorkoutSession: async (id) => {
+    await deleteSession(id)
+    set((state) => ({
+      workoutSessions: state.workoutSessions.filter((s) => s.id !== id),
+    }))
+  },
+
+  getSessionsForDate: async (date) => {
+    return dbGetSessionsForDate(date)
+  },
+
+  refreshSessions: async () => {
+    const sessions = await getAllSessions()
+    const records = await getAllRecords()
+    const recordsMap = new Map<string, PersonalRecord>()
+    for (const r of records) recordsMap.set(r.exerciseId, r)
+    set({ workoutSessions: sessions, personalRecords: recordsMap })
+  },
 }))

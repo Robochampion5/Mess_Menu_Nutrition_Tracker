@@ -109,3 +109,61 @@ export const DAY_NAMES = [
   'Sunday',
 ]
 export const DAY_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+// ── Workout Types ─────────────────────────────────────────────────────
+
+export type ExerciseCategory = 'push' | 'pull' | 'legs' | 'core' | 'cardio' | 'other'
+export type TrackingType = 'sets_reps_weight' | 'duration' | 'distance_duration'
+export type WeightUnit = 'kg' | 'lb'
+
+export interface Exercise {
+  id: string
+  name: string
+  category: ExerciseCategory
+  muscleGroups: string[] // e.g. ['chest', 'triceps']
+  trackingType: TrackingType
+  isCustom?: boolean
+}
+
+/** One set of an exercise */
+export interface WorkoutSet {
+  reps?: number         // for sets_reps_weight
+  weight?: number       // display value (may be in kg or lb)
+  unit?: WeightUnit     // kg or lb — defaults to kg
+  weightKg?: number     // canonical normalized value used for PR comparison
+  duration?: number     // seconds — for duration / distance_duration
+  distance?: number     // km — for distance_duration
+  isFailure?: boolean   // failed set — excluded from PR detection
+}
+
+/** An exercise within a session, with its sets */
+export interface WorkoutExercise {
+  exerciseId: string
+  sets: WorkoutSet[]
+  notes?: string
+}
+
+/** A single training session */
+export interface WorkoutSession {
+  id: string            // nanoid / crypto.randomUUID
+  date: string          // YYYY-MM-DD
+  name?: string         // e.g. "Push Day"
+  exercises: WorkoutExercise[]
+  notes?: string
+  durationMin?: number  // optional total session duration
+  createdAt: string
+}
+
+/** Best performance for an exercise — always stored in kg internally */
+export interface PersonalRecord {
+  exerciseId: string
+  // Strength PRs (sets_reps_weight)
+  bestWeightKg?: number
+  bestReps?: number
+  best1RM?: number      // Epley formula: weightKg × (1 + reps / 30)
+  // Cardio PRs
+  bestDuration?: number // seconds
+  bestDistance?: number // km
+  achievedAt: string    // ISO date string
+  displayUnit?: WeightUnit // unit the user was using when they set the PR (for display)
+}
