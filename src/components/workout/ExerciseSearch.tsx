@@ -29,17 +29,17 @@ export function ExerciseSearch({
   const [open, setOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const filtered = query.trim().length === 0
-    ? exercises.slice(0, 20)
-    : exercises.filter((e) =>
-        e.name.toLowerCase().includes(query.toLowerCase()) ||
-        e.muscleGroups.some((m) => m.toLowerCase().includes(query.toLowerCase())),
-      )
+  const filtered =
+    query.trim().length === 0
+      ? exercises.slice(0, 20)
+      : exercises.filter(
+          (e) =>
+            e.name.toLowerCase().includes(query.toLowerCase()) ||
+            e.muscleGroups.some((m) => m.toLowerCase().includes(query.toLowerCase())),
+        )
 
   // Dedup check: case-insensitive match against all exercises
-  const exactMatch = exercises.find(
-    (e) => e.name.toLowerCase() === query.trim().toLowerCase(),
-  )
+  const exactMatch = exercises.find((e) => e.name.toLowerCase() === query.trim().toLowerCase())
   const showCreateOption =
     query.trim().length >= 2 && !exactMatch && filtered.length < exercises.length
 
@@ -58,7 +58,11 @@ export function ExerciseSearch({
     if (!name) return
     // Check dedup
     if (exactMatch) {
-      if (!window.confirm(`"${exactMatch.name}" already exists — use that instead? Click Cancel to create a separate custom entry anyway.`)) {
+      if (
+        !window.confirm(
+          `"${exactMatch.name}" already exists — use that instead? Click Cancel to create a separate custom entry anyway.`,
+        )
+      ) {
         return
       }
       onSelect(exactMatch)
@@ -106,7 +110,13 @@ export function ExerciseSearch({
           className="flex-1 bg-transparent text-white text-sm outline-none placeholder:text-[var(--color-text-tertiary)]"
         />
         {query && (
-          <button onClick={() => { setQuery(''); setOpen(false) }} aria-label="Clear">
+          <button
+            onClick={() => {
+              setQuery('')
+              setOpen(false)
+            }}
+            aria-label="Clear"
+          >
             <X size={14} className="text-[var(--color-text-tertiary)]" />
           </button>
         )}

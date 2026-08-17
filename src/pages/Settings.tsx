@@ -94,8 +94,7 @@ export function Settings() {
         await Promise.all(
           data.personalRecords.map((r: Parameters<typeof saveRecord>[0]) => saveRecord(r)),
         )
-      if (data.exercises)
-        await bulkUpsertExercises(data.exercises)
+      if (data.exercises) await bulkUpsertExercises(data.exercises)
       showToast('Import complete! Reload to see changes.', 'success')
       setTimeout(() => window.location.reload(), 1500)
     } catch {

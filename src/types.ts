@@ -127,13 +127,13 @@ export interface Exercise {
 
 /** One set of an exercise */
 export interface WorkoutSet {
-  reps?: number         // for sets_reps_weight
-  weight?: number       // display value (may be in kg or lb)
-  unit?: WeightUnit     // kg or lb — defaults to kg
-  weightKg?: number     // canonical normalized value used for PR comparison
-  duration?: number     // seconds — for duration / distance_duration
-  distance?: number     // km — for distance_duration
-  isFailure?: boolean   // failed set — excluded from PR detection
+  reps?: number // for sets_reps_weight
+  weight?: number // display value (may be in kg or lb)
+  unit?: WeightUnit // kg or lb — defaults to kg
+  weightKg?: number // canonical normalized value used for PR comparison
+  duration?: number // seconds — for duration / distance_duration
+  distance?: number // km — for distance_duration
+  isFailure?: boolean // failed set — excluded from PR detection
 }
 
 /** An exercise within a session, with its sets */
@@ -145,12 +145,12 @@ export interface WorkoutExercise {
 
 /** A single training session */
 export interface WorkoutSession {
-  id: string            // nanoid / crypto.randomUUID
-  date: string          // YYYY-MM-DD
-  name?: string         // e.g. "Push Day"
+  id: string // nanoid / crypto.randomUUID
+  date: string // YYYY-MM-DD
+  name?: string // e.g. "Push Day"
   exercises: WorkoutExercise[]
   notes?: string
-  durationMin?: number  // optional total session duration
+  durationMin?: number // optional total session duration
   createdAt: string
 }
 
@@ -160,10 +160,10 @@ export interface PersonalRecord {
   // Strength PRs (sets_reps_weight)
   bestWeightKg?: number
   bestReps?: number
-  best1RM?: number      // Epley formula: weightKg × (1 + reps / 30)
+  best1RM?: number // Epley formula: weightKg × (1 + reps / 30)
   // Cardio PRs
   bestDuration?: number // seconds
   bestDistance?: number // km
-  achievedAt: string    // ISO date string
+  achievedAt: string // ISO date string
   displayUnit?: WeightUnit // unit the user was using when they set the PR (for display)
 }

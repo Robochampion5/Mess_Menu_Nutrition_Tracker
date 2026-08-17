@@ -118,17 +118,13 @@ describe('isNewPR', () => {
     // 225lb = ~102.06 kg; 102.06 × (1 + 5/30) ≈ 119.07
     // Existing best = 116.67 (100kg × 5)
     const existing = makeRecord(calculate1RM(100, 5))
-    expect(
-      isNewPR(makeSet({ weight: 225, reps: 5, unit: 'lb' }), existing),
-    ).toBe(true)
+    expect(isNewPR(makeSet({ weight: 225, reps: 5, unit: 'lb' }), existing)).toBe(true)
   })
 
   it('lb set that does NOT beat existing kg record returns false', () => {
     // 200lb = ~90.72 kg; 90.72 × (1 + 5/30) ≈ 105.84 < 116.67
     const existing = makeRecord(calculate1RM(100, 5))
-    expect(
-      isNewPR(makeSet({ weight: 200, reps: 5, unit: 'lb' }), existing),
-    ).toBe(false)
+    expect(isNewPR(makeSet({ weight: 200, reps: 5, unit: 'lb' }), existing)).toBe(false)
   })
 
   // Edge: set with no weight → not a PR

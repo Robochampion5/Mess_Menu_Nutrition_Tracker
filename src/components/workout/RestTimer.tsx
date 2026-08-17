@@ -23,7 +23,7 @@ export function RestTimer({ autoStart = false, onDone }: RestTimerProps) {
     if (autoStart) {
       endTimeRef.current = Date.now() + 90 * 1000
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Reset when duration preset changes
@@ -80,7 +80,6 @@ export function RestTimer({ autoStart = false, onDone }: RestTimerProps) {
     }
   }, [running, duration, onDone])
 
-
   const pct = remaining / duration
   const circumference = 2 * Math.PI * 28 // r=28
 
@@ -100,7 +99,14 @@ export function RestTimer({ autoStart = false, onDone }: RestTimerProps) {
       {/* Circular progress */}
       <div className="relative flex items-center justify-center">
         <svg width={72} height={72} className="-rotate-90">
-          <circle cx={36} cy={36} r={28} fill="none" stroke="var(--color-surface-3)" strokeWidth={4} />
+          <circle
+            cx={36}
+            cy={36}
+            r={28}
+            fill="none"
+            stroke="var(--color-surface-3)"
+            strokeWidth={4}
+          />
           <circle
             cx={36}
             cy={36}
@@ -130,7 +136,11 @@ export function RestTimer({ autoStart = false, onDone }: RestTimerProps) {
           style={{ background: 'var(--color-carbs)' }}
           aria-label={running ? 'Pause timer' : 'Start timer'}
         >
-          {running ? <Pause size={16} className="text-white" /> : <Play size={16} className="text-white" fill="white" />}
+          {running ? (
+            <Pause size={16} className="text-white" />
+          ) : (
+            <Play size={16} className="text-white" fill="white" />
+          )}
         </button>
         <button
           onClick={skip}
@@ -150,9 +160,7 @@ export function RestTimer({ autoStart = false, onDone }: RestTimerProps) {
             onClick={() => selectDuration(d)}
             className={[
               'px-2.5 py-1 rounded-full text-xs font-medium transition-all',
-              d === duration
-                ? 'text-white'
-                : 'text-[var(--color-text-tertiary)] hover:text-white',
+              d === duration ? 'text-white' : 'text-[var(--color-text-tertiary)] hover:text-white',
             ].join(' ')}
             style={
               d === duration

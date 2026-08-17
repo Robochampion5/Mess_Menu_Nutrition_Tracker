@@ -20,9 +20,7 @@ export function Weekly() {
   const proteinGoal = profile?.proteinGoalG ?? 120
 
   useEffect(() => {
-    Promise.all(weekDates.map((date) => getDailyLogsForDate(date))).finally(() =>
-      setLoading(false),
-    )
+    Promise.all(weekDates.map((date) => getDailyLogsForDate(date))).finally(() => setLoading(false))
   }, [weekDates, getDailyLogsForDate])
 
   const weekData = useMemo(() => {
@@ -51,10 +49,7 @@ export function Weekly() {
     return Math.round(logged.reduce((sum, d) => sum + d.protein, 0) / logged.length)
   }, [weekData])
 
-  const daysHit = useMemo(
-    () => weekData.filter((d) => d.goalHit && !d.isFuture).length,
-    [weekData],
-  )
+  const daysHit = useMemo(() => weekData.filter((d) => d.goalHit && !d.isFuture).length, [weekData])
 
   const streak = useMemo(() => {
     let s = 0
@@ -70,12 +65,7 @@ export function Weekly() {
 
   // Workout frequency — which days this week had a session
   const trainedDates = useMemo(
-    () =>
-      new Set(
-        workoutSessions
-          .filter((s) => weekDates.includes(s.date))
-          .map((s) => s.date),
-      ),
+    () => new Set(workoutSessions.filter((s) => weekDates.includes(s.date)).map((s) => s.date)),
     [workoutSessions, weekDates],
   )
 
@@ -83,9 +73,7 @@ export function Weekly() {
     <div className="flex-1 pb-8 overflow-y-auto">
       <div className="px-4 pt-6 pb-4">
         <h1 className="text-2xl font-bold text-white font-display tracking-tight">This Week</h1>
-        <p className="text-sm text-[var(--color-text-secondary)] mt-0.5">
-          Mon – Sun overview
-        </p>
+        <p className="text-sm text-[var(--color-text-secondary)] mt-0.5">Mon – Sun overview</p>
       </div>
 
       {/* Summary stat cards */}

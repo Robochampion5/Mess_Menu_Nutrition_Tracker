@@ -8,10 +8,7 @@ interface WorkoutSummaryCardProps {
   personalRecords?: Map<string, PersonalRecord>
 }
 
-export function WorkoutSummaryCard({
-  session,
-  newPRCount = 0,
-}: WorkoutSummaryCardProps) {
+export function WorkoutSummaryCard({ session, newPRCount = 0 }: WorkoutSummaryCardProps) {
   const navigate = useNavigate()
 
   if (!session) {

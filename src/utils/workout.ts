@@ -26,10 +26,7 @@ export function calculate1RM(weightKg: number, reps: number): number {
  * - If no existing record → always a new PR (first-ever set)
  * - Tied 1RM (same value) → NOT a new PR (must strictly exceed)
  */
-export function isNewPR(
-  set: WorkoutSet,
-  existing: PersonalRecord | undefined,
-): boolean {
+export function isNewPR(set: WorkoutSet, existing: PersonalRecord | undefined): boolean {
   // Never award PR on a failure set
   if (set.isFailure) return false
 

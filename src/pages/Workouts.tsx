@@ -9,7 +9,13 @@ import { EmptyState } from '../components/ui/EmptyState'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { showToast } from '../components/ui/Toast'
-import type { Exercise, WorkoutExercise, WorkoutSet, WorkoutSession, PersonalRecord } from '../types'
+import type {
+  Exercise,
+  WorkoutExercise,
+  WorkoutSet,
+  WorkoutSession,
+  PersonalRecord,
+} from '../types'
 import { toDateString } from '../utils/weekKey'
 import { isNewPR, calculate1RM, toKg } from '../utils/workout'
 
@@ -23,8 +29,14 @@ function generateId() {
 // Log Tab — today's active workout
 // ─────────────────────────────────────────────────────────────
 function LogTab() {
-  const { exercises, personalRecords, saveWorkoutSession, deleteWorkoutSession, workoutSessions, upsertExercise } =
-    useAppStore()
+  const {
+    exercises,
+    personalRecords,
+    saveWorkoutSession,
+    deleteWorkoutSession,
+    workoutSessions,
+    upsertExercise,
+  } = useAppStore()
 
   const today = toDateString()
   const todaySession = workoutSessions.find((s) => s.date === today)
@@ -91,7 +103,8 @@ function LogTab() {
     const key = `${exerciseId}-${setIdx}`
     setNewPRMap((prev) => {
       const next = new Set(prev)
-      if (isPR) next.add(key); else next.delete(key)
+      if (isPR) next.add(key)
+      else next.delete(key)
       return next
     })
     setSession((s) =>
@@ -184,10 +197,7 @@ function LogTab() {
     showToast('Session deleted', 'info')
   }
 
-  const exerciseMap = useMemo(
-    () => new Map(exercises.map((e) => [e.id, e])),
-    [exercises],
-  )
+  const exerciseMap = useMemo(() => new Map(exercises.map((e) => [e.id, e])), [exercises])
 
   if (!session) {
     return (
@@ -223,9 +233,7 @@ function LogTab() {
       </div>
 
       {/* Rest timer */}
-      {showTimer && (
-        <RestTimer key={timerKey} autoStart onDone={() => setShowTimer(false)} />
-      )}
+      {showTimer && <RestTimer key={timerKey} autoStart onDone={() => setShowTimer(false)} />}
 
       {/* Exercise list */}
       {session.exercises.map((we: WorkoutExercise) => {
@@ -249,7 +257,10 @@ function LogTab() {
               onClick={() => setExpandedExercise(isExpanded ? null : we.exerciseId)}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setExpandedExercise(isExpanded ? null : we.exerciseId) }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ')
+                  setExpandedExercise(isExpanded ? null : we.exerciseId)
+              }}
             >
               <div className="flex items-center gap-3">
                 <Dumbbell size={16} style={{ color: 'var(--color-protein)' }} />
@@ -262,13 +273,20 @@ function LogTab() {
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={(e) => { e.stopPropagation(); removeExercise(we.exerciseId) }}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    removeExercise(we.exerciseId)
+                  }}
                   className="p-1 text-[var(--color-text-tertiary)] hover:text-red-400 transition-colors"
                   aria-label="Remove exercise"
                 >
                   <Trash2 size={14} />
                 </button>
-                {isExpanded ? <ChevronUp size={16} className="text-[var(--color-text-secondary)]" /> : <ChevronDown size={16} className="text-[var(--color-text-secondary)]" />}
+                {isExpanded ? (
+                  <ChevronUp size={16} className="text-[var(--color-text-secondary)]" />
+                ) : (
+                  <ChevronDown size={16} className="text-[var(--color-text-secondary)]" />
+                )}
               </div>
             </div>
 
@@ -289,7 +307,10 @@ function LogTab() {
                 <button
                   onClick={() => addSet(we.exerciseId, ex.trackingType)}
                   className="w-full flex items-center justify-center gap-2 py-2 rounded-[var(--radius-md)] text-sm font-medium transition-colors hover:bg-[var(--color-surface-2)]"
-                  style={{ color: 'var(--color-protein)', border: '1px dashed rgba(255,55,95,0.3)' }}
+                  style={{
+                    color: 'var(--color-protein)',
+                    border: '1px dashed rgba(255,55,95,0.3)',
+                  }}
                 >
                   <Plus size={14} /> Add Set
                 </button>
@@ -357,7 +378,11 @@ function HistoryTab() {
                 {s.date} · {s.exercises.length} exercise{s.exercises.length !== 1 ? 's' : ''}
               </p>
             </div>
-            {expanded === s.id ? <ChevronUp size={16} className="text-[var(--color-text-tertiary)]" /> : <ChevronDown size={16} className="text-[var(--color-text-tertiary)]" />}
+            {expanded === s.id ? (
+              <ChevronUp size={16} className="text-[var(--color-text-tertiary)]" />
+            ) : (
+              <ChevronDown size={16} className="text-[var(--color-text-tertiary)]" />
+            )}
           </button>
           {expanded === s.id && (
             <div className="px-4 pb-4 space-y-2">
@@ -456,9 +481,7 @@ function RecordsTab() {
             <button
               key={r.exerciseId}
               onClick={() =>
-                setSelectedExerciseId(
-                  selectedExerciseId === r.exerciseId ? null : r.exerciseId,
-                )
+                setSelectedExerciseId(selectedExerciseId === r.exerciseId ? null : r.exerciseId)
               }
               className={[
                 'w-full flex items-center justify-between px-4 py-3 text-left transition-colors hover:bg-[var(--color-surface-2)]',
@@ -471,7 +494,10 @@ function RecordsTab() {
               </div>
               <div className="text-right">
                 {r.best1RM != null && (
-                  <p className="text-sm font-bold num-large" style={{ color: 'var(--color-protein)' }}>
+                  <p
+                    className="text-sm font-bold num-large"
+                    style={{ color: 'var(--color-protein)' }}
+                  >
                     {Math.round(r.best1RM)}kg 1RM
                   </p>
                 )}
@@ -481,12 +507,18 @@ function RecordsTab() {
                   </p>
                 )}
                 {r.bestDistance != null && (
-                  <p className="text-sm font-bold num-large" style={{ color: 'var(--color-calories)' }}>
+                  <p
+                    className="text-sm font-bold num-large"
+                    style={{ color: 'var(--color-calories)' }}
+                  >
                     {r.bestDistance}km
                   </p>
                 )}
                 {r.bestDuration != null && !r.bestDistance && (
-                  <p className="text-sm font-bold num-large" style={{ color: 'var(--color-carbs)' }}>
+                  <p
+                    className="text-sm font-bold num-large"
+                    style={{ color: 'var(--color-carbs)' }}
+                  >
                     {Math.round(r.bestDuration / 60)}min
                   </p>
                 )}

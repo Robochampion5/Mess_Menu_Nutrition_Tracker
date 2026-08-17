@@ -37,9 +37,7 @@ export function WorkoutFrequencyStrip({ trainedDates, weekDates }: WorkoutFreque
                 }}
                 title={date}
               >
-                {trained && (
-                  <span className="text-white text-[8px] font-bold">✓</span>
-                )}
+                {trained && <span className="text-white text-[8px] font-bold">✓</span>}
               </div>
               <span
                 className="text-[9px] font-medium"

@@ -35,12 +35,8 @@ export function SetRow({
         set.isFailure ? 'opacity-60' : '',
       ].join(' ')}
       style={{
-        background: isNewPR
-          ? 'rgba(255, 55, 95, 0.08)'
-          : 'var(--color-surface-2)',
-        border: isNewPR
-          ? '1px solid rgba(255, 55, 95, 0.25)'
-          : '1px solid var(--color-border)',
+        background: isNewPR ? 'rgba(255, 55, 95, 0.08)' : 'var(--color-surface-2)',
+        border: isNewPR ? '1px solid rgba(255, 55, 95, 0.25)' : '1px solid var(--color-border)',
       }}
     >
       {/* Set number */}

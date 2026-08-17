@@ -52,19 +52,30 @@ export function Stepper({
         onClick={decrement}
         disabled={value <= min}
         aria-label="Decrease"
-        className={[btnBase, value <= min ? btnDisabled : btnEnabled, decAnim ? 'stepper-tap' : ''].join(' ')}
+        className={[
+          btnBase,
+          value <= min ? btnDisabled : btnEnabled,
+          decAnim ? 'stepper-tap' : '',
+        ].join(' ')}
       >
         <span className="text-lg leading-none select-none">−</span>
       </button>
       <span className="min-w-10 text-center text-sm font-semibold tabular-nums num-large">
-        {value}{unit ? <span className="text-[10px] text-[var(--color-text-secondary)] ml-0.5">{unit}</span> : null}
+        {value}
+        {unit ? (
+          <span className="text-[10px] text-[var(--color-text-secondary)] ml-0.5">{unit}</span>
+        ) : null}
       </span>
       <button
         type="button"
         onClick={increment}
         disabled={value >= max}
         aria-label="Increase"
-        className={[btnBase, value >= max ? btnDisabled : btnEnabled, incAnim ? 'stepper-tap' : ''].join(' ')}
+        className={[
+          btnBase,
+          value >= max ? btnDisabled : btnEnabled,
+          incAnim ? 'stepper-tap' : '',
+        ].join(' ')}
       >
         <span className="text-lg leading-none select-none">+</span>
       </button>

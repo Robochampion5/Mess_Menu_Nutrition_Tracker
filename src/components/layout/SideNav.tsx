@@ -134,8 +134,10 @@ export function SideNav({ mobileOpen, onMobileClose }: SideNavProps) {
           !isMobile && !expanded ? 'justify-center' : 'gap-3 pl-4',
         ].join(' ')}
       >
-        <div className="w-8 h-8 rounded-xl bg-[var(--color-protein)] flex items-center justify-center shadow-lg flex-shrink-0"
-          style={{ boxShadow: 'var(--shadow-glow-protein)' }}>
+        <div
+          className="w-8 h-8 rounded-xl bg-[var(--color-protein)] flex items-center justify-center shadow-lg flex-shrink-0"
+          style={{ boxShadow: 'var(--shadow-glow-protein)' }}
+        >
           <span className="text-white text-xs font-bold font-display">MT</span>
         </div>
         {(isMobile || expanded) && (
@@ -187,7 +189,9 @@ export function SideNav({ mobileOpen, onMobileClose }: SideNavProps) {
                   ].join(' ')}
                 />
                 {(isMobile || expanded) && (
-                  <span className={['text-sm font-medium', isActive ? 'font-semibold' : ''].join(' ')}>
+                  <span
+                    className={['text-sm font-medium', isActive ? 'font-semibold' : ''].join(' ')}
+                  >
                     {label}
                   </span>
                 )}
@@ -245,11 +249,7 @@ export function SideNav({ mobileOpen, onMobileClose }: SideNavProps) {
       {mobileOpen && (
         <>
           {/* Backdrop */}
-          <div
-            className="sidebar-backdrop md:hidden"
-            onClick={onMobileClose}
-            aria-hidden="true"
-          />
+          <div className="sidebar-backdrop md:hidden" onClick={onMobileClose} aria-hidden="true" />
           {/* Drawer */}
           <aside
             className="fixed left-0 top-0 bottom-0 z-50 md:hidden flex flex-col glass"

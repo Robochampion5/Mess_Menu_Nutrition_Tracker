@@ -15,7 +15,6 @@ const paddingStyles: Record<string, string> = {
   lg: 'p-5',
 }
 
-
 export function Card({
   children,
   className = '',
@@ -25,9 +24,7 @@ export function Card({
 }: CardProps) {
   const baseClass = [
     'rounded-[var(--radius-xl)]',
-    variant === 'glass'
-      ? 'glass'
-      : 'bg-[var(--color-surface)]',
+    variant === 'glass' ? 'glass' : 'bg-[var(--color-surface)]',
     paddingStyles[padding],
     onClick
       ? [

@@ -29,13 +29,13 @@
   --color-accent-orange: #ff9f0a;
 
   /* Elevation shadows — card layering system */
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
-  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);
-  --shadow-card-raised: 0 8px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
-  --shadow-glow-protein: 0 0 20px rgba(255,55,95,0.25);
-  --shadow-glow-calories: 0 0 20px rgba(48,209,88,0.2);
-  --shadow-glow-carbs: 0 0 20px rgba(10,132,255,0.2);
-  --shadow-drawer: 4px 0 40px rgba(0,0,0,0.8);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-card-raised: 0 8px 32px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-glow-protein: 0 0 20px rgba(255, 55, 95, 0.25);
+  --shadow-glow-calories: 0 0 20px rgba(48, 209, 88, 0.2);
+  --shadow-glow-carbs: 0 0 20px rgba(10, 132, 255, 0.2);
+  --shadow-drawer: 4px 0 40px rgba(0, 0, 0, 0.8);
 
   /* Spacing & radius */
   --radius-xs: 6px;
@@ -48,7 +48,7 @@
   /* Sidebar layout */
   --sidebar-width: 240px;
   --sidebar-collapsed-width: 64px;
-  --sidebar-transition: width 0.25s cubic-bezier(0.4,0,0.2,1);
+  --sidebar-transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Typography */
   --font-display: 'Manrope', system-ui, sans-serif;
@@ -85,7 +85,9 @@ body {
 }
 
 /* ── Typography Scale ────────────────────────────────────────────────── */
-.font-display { font-family: var(--font-display); }
+.font-display {
+  font-family: var(--font-display);
+}
 
 /* Big numbers — protein grams, PR weights, etc. */
 .num-hero {
@@ -103,8 +105,12 @@ body {
 
 /* ── Ring Animation ──────────────────────────────────────────────────── */
 @keyframes ring-fill {
-  from { stroke-dashoffset: var(--ring-circumference); }
-  to   { stroke-dashoffset: var(--ring-target-offset); }
+  from {
+    stroke-dashoffset: var(--ring-circumference);
+  }
+  to {
+    stroke-dashoffset: var(--ring-target-offset);
+  }
 }
 
 .ring-animated {
@@ -113,8 +119,12 @@ body {
 
 /* ── Skeleton Shimmer ────────────────────────────────────────────────── */
 @keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
 }
 
 .skeleton {
@@ -131,9 +141,18 @@ body {
 
 /* ── PR Badge glow animation ─────────────────────────────────────────── */
 @keyframes pr-pop {
-  0%   { transform: scale(0.6); opacity: 0; }
-  60%  { transform: scale(1.15); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .pr-badge {
@@ -142,9 +161,15 @@ body {
 
 /* ── Micro-interactions ──────────────────────────────────────────────── */
 @keyframes stepper-tap {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(0.85); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.85);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .stepper-tap {
@@ -153,8 +178,14 @@ body {
 
 /* Route transition */
 @keyframes page-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .page-enter {
@@ -166,14 +197,18 @@ body {
   position: fixed;
   inset: 0;
   z-index: 40;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
 
 /* ── Scrollbar (hide for mobile feel) ───────────────────────────────── */
-::-webkit-scrollbar { display: none; }
-* { scrollbar-width: none; }
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  scrollbar-width: none;
+}
 
 /* ── Focus visible (accessibility) ──────────────────────────────────── */
 :focus-visible {
@@ -192,5 +227,5 @@ body {
   background: rgba(20, 20, 20, 0.8);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }

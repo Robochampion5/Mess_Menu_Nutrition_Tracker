@@ -87,9 +87,7 @@ export function Home() {
   // Count PRs achieved in today's session (compare session date with record achievedAt)
   const todayPRCount = useMemo(() => {
     if (!todaySession) return 0
-    return Array.from(personalRecords.values()).filter(
-      (r) => r.achievedAt === selectedDate,
-    ).length
+    return Array.from(personalRecords.values()).filter((r) => r.achievedAt === selectedDate).length
   }, [personalRecords, selectedDate, todaySession])
 
   return (
@@ -120,8 +118,18 @@ export function Home() {
           <SkeletonRings size={220} />
         ) : (
           <ActivityRings
-            protein={{ value: totalMacros.protein, goal: proteinGoal, color: '#ff375f', label: 'Protein' }}
-            calories={{ value: totalMacros.calories, goal: calorieGoal, color: '#30d158', label: 'Calories' }}
+            protein={{
+              value: totalMacros.protein,
+              goal: proteinGoal,
+              color: '#ff375f',
+              label: 'Protein',
+            }}
+            calories={{
+              value: totalMacros.calories,
+              goal: calorieGoal,
+              color: '#30d158',
+              label: 'Calories',
+            }}
             carbs={{ value: totalMacros.carbs, goal: carbsGoal, color: '#0a84ff', label: 'Carbs' }}
             size={220}
           />
@@ -145,7 +153,10 @@ export function Home() {
               Log a meal or add outside food to hit your goal
             </p>
           </div>
-          <span className="text-3xl font-extrabold tabular-nums num-hero" style={{ color: '#ff375f' }}>
+          <span
+            className="text-3xl font-extrabold tabular-nums num-hero"
+            style={{ color: '#ff375f' }}
+          >
             {Math.round(proteinRemaining)}
           </span>
         </div>
@@ -156,7 +167,9 @@ export function Home() {
           className="mx-4 mb-4 px-4 py-3 rounded-[var(--radius-lg)] text-center"
           style={{ background: 'rgba(48,209,88,0.08)', border: '1px solid rgba(48,209,88,0.2)' }}
         >
-          <p className="text-sm font-semibold" style={{ color: '#30d158' }}>🎉 Protein goal hit!</p>
+          <p className="text-sm font-semibold" style={{ color: '#30d158' }}>
+            🎉 Protein goal hit!
+          </p>
         </div>
       )}
 
@@ -165,8 +178,18 @@ export function Home() {
         {loading
           ? [0, 1, 2].map((i) => <SkeletonCard key={i} />)
           : [
-              { label: 'Protein', value: Math.round(totalMacros.protein), unit: 'g', color: '#ff375f' },
-              { label: 'Calories', value: Math.round(totalMacros.calories), unit: 'kcal', color: '#30d158' },
+              {
+                label: 'Protein',
+                value: Math.round(totalMacros.protein),
+                unit: 'g',
+                color: '#ff375f',
+              },
+              {
+                label: 'Calories',
+                value: Math.round(totalMacros.calories),
+                unit: 'kcal',
+                color: '#30d158',
+              },
               { label: 'Carbs', value: Math.round(totalMacros.carbs), unit: 'g', color: '#0a84ff' },
             ].map(({ label, value, unit, color }) => (
               <Card key={label} padding="sm" className="text-center">
@@ -216,12 +239,17 @@ export function Home() {
                         </p>
                       )}
                       {!record && (
-                        <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">Tap to log</p>
+                        <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">
+                          Tap to log
+                        </p>
                       )}
                     </div>
                   </div>
                   {macros && (
-                    <span className="text-lg font-bold tabular-nums num-large" style={{ color: '#ff375f' }}>
+                    <span
+                      className="text-lg font-bold tabular-nums num-large"
+                      style={{ color: '#ff375f' }}
+                    >
                       {Math.round(macros.protein)}g
                     </span>
                   )}
